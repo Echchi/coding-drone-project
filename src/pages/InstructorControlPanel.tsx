@@ -1,11 +1,5 @@
-import React from 'react';
-
-const TeacherDashboard = () => {
-    return (
-        <div>
-            TeacherDashboard
-        </div>
-    );
+const InstructorControlPanel = () => {
+  return <div>TeacherDashboard</div>;
 };
 
-export default TeacherDashboard;
+export default InstructorControlPanel;

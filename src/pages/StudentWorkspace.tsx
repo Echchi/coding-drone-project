@@ -1,11 +1,5 @@
-import React from 'react';
-
-const StudentDashboard = () => {
-    return (
-        <div>
-            StudentDashboard
-        </div>
-    );
+const StudentWorkspace = () => {
+  return <div>StudentDashboard</div>;
 };
 
-export default StudentDashboard;
+export default StudentWorkspace;
