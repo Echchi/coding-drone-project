@@ -27,7 +27,6 @@ const Input = ({
   onBlur,
   isLoading,
 }: IInputProps) => {
-  console.log("error", errorMessage);
   return (
     <>
       <div className="relative flex items-center w-full text-lg bg-white group *:transition focus:outline-lime-500 focus:outline-offset-1 rounded-full ring-[2px] ring-lime-500 ">

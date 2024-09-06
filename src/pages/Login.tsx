@@ -29,7 +29,6 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
-    console.log("code", code);
     if (code.length === 0) return;
     if (code === "23899192") {
       localStorage.setItem("role", "student");
@@ -49,7 +48,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-w-fit w-1/3 min-h-fit h-1/2 m-auto bg-yellow-50 rounded-lg shadow flex flex-col justify-center items-center py-5">
+    <div className="min-w-fit w-1/3 min-h-fit h-1/2 m-auto bg-amber-50 rounded-lg shadow flex flex-col justify-center items-center py-5">
       <p className="w-full text-4xl font-dunggeunmiso-b text-center text-lime-500">
         공통 로그인 폼
       </p>
