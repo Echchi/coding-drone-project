@@ -1,5 +1,5 @@
 const StudentWorkspace = () => {
-  return <div>StudentDashboard</div>;
+  return <div>StudentWorkspace</div>;
 };
 
 export default StudentWorkspace;

@@ -3,7 +3,7 @@ import InstructorControlPanel from "../../../pages/InstructorControlPanel.tsx";
 import StudentWorkspace from "../../../pages/StudentWorkspace.tsx";
 import NotFound from "../../../pages/NotFound.tsx";
 import Layout from "../../Layout.tsx";
-import Login from "../../../pages/Login.tsx";
+import Login from "../../../pages/Login/Login.tsx";
 
 const Router = createBrowserRouter([
   {

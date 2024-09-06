@@ -1,5 +1,5 @@
 const InstructorControlPanel = () => {
-  return <div>TeacherDashboard</div>;
+  return <div>InstructorControlPanel</div>;
 };
 
 export default InstructorControlPanel;
