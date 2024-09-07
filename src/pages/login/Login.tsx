@@ -1,13 +1,8 @@
-import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Input from "../../sahred/ui/Input.tsx";
-import { useEffect, useMemo, useState } from "react";
-import { debounce } from "lodash";
+import { useState } from "react";
+
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { useLocation, useNavigate } from "react-router-dom";
-import MainButton from "../../sahred/ui/MainButton.tsx";
+
 import StudentLogin from "./student/StudentLogin.tsx";
 import InstructorLogin from "./instructor/InstructorLogin.tsx";
 const Login = () => {
