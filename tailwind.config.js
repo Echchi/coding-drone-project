@@ -7,6 +7,7 @@ export default {
         "dunggeunmiso-b": ["DunggeunmisoB", "sans-serif"],
         "dunggeunmiso-r": ["DunggeunmisoR", "sans-serif"],
         pretendard: ["Pretendard-Regular", "sans-serif"],
+        JetBrains: ["JetBrainsMono", "sans-serif"],
       },
     },
   },
