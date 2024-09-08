@@ -7,7 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useLocation, useNavigate } from "react-router-dom";
-import Button from "../../sahred/ui/Button.tsx";
+import MainButton from "../../sahred/ui/MainButton.tsx";
 import StudentLogin from "./student/StudentLogin.tsx";
 import InstructorLogin from "./instructor/InstructorLogin.tsx";
 const Login = () => {

@@ -6,7 +6,7 @@ interface IButtonProps {
   className?: string;
   title: string;
 }
-const Button = ({ disabled, onClick, title, className }: IButtonProps) => {
+const MainButton = ({ disabled, onClick, title, className }: IButtonProps) => {
   return (
     <button
       className={cls(
@@ -21,4 +21,4 @@ const Button = ({ disabled, onClick, title, className }: IButtonProps) => {
   );
 };
 
-export default Button;
+export default MainButton;

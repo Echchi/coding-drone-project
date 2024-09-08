@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CodeEditor from "./codeEditor/CodeEditor.tsx";
-import Button from "../../../sahred/ui/Button.tsx";
+import MainButton from "../../../sahred/ui/MainButton.tsx";
 import CodeResult from "./codeResult/CodeResult.tsx";
 
 const Code = () => {
@@ -9,7 +9,7 @@ const Code = () => {
   return (
     <>
       <CodeEditor codeInput={codeInput} setCodeInput={setCodeInput} />
-      <Button
+      <MainButton
         title={"실행하기"}
         onClick={() => setResult("hello")}
         disabled={codeInput.length === 0}

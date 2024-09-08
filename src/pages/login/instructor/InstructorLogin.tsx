@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 import { AnimatePresence, motion } from "framer-motion";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import Button from "../../../sahred/ui/Button.tsx";
+import MainButton from "../../../sahred/ui/MainButton.tsx";
 
 const InstructorLogin = () => {
   const navigate = useNavigate();
@@ -76,7 +76,7 @@ const InstructorLogin = () => {
         />
       </div>
 
-      <Button
+      <MainButton
         title={"로그인"}
         onClick={handleLoginOnClick}
         className={"!mt-6"}
