@@ -27,7 +27,7 @@ const DroneControl = ({ isOn, setIsOn }: IDroneControlProps) => {
         )}
       </AnimatePresence>
       <div className="w-10/12 h-4/5">
-        <img src="/src/assets/icon/drone.png" className="w-full h-full p-6" />
+        <img src="/src/assets/icon/drone.png" className="w-full h-full p-10" />
       </div>
 
       <span className="absolute right-1 top-1 text-blue-700 flex flex-col items-center">
