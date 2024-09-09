@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import InstructorControlPanel from "../../../pages/InstructorControlPanel.tsx";
+import InstructorControlPanel from "../../../pages/instructor/InstructorControlPanel.tsx";
 import Workspace from "../../../pages/student/Workspace.tsx";
 import NotFound from "../../../pages/NotFound.tsx";
 import Layout from "../../Layout.tsx";

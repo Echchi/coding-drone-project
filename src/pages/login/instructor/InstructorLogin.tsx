@@ -64,7 +64,7 @@ const InstructorLogin = () => {
           errorMessage={error}
         />
         <Input
-          type={"text"}
+          type={"password"}
           maxLength={10}
           icon={<FontAwesomeIcon icon={faLock} />}
           placeholder="비밀번호"

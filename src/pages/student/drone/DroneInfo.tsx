@@ -15,9 +15,9 @@ const DroneInfo = ({ isOn }: { isOn: boolean }) => {
       <div className="flex w-full px-2">
         <div className="font-bold">Co Drone Mini</div>
       </div>
-      <p className="flex items-center space-x-1 ">
+      <p className="flex items-center space-x-1">
         <span className="font-semibold">99%</span>
-        <span className="*:size-8">
+        <span className="*:size-8 flex items-center">
           <FontAwesomeIcon icon={faBatteryFull} />
         </span>
       </p>

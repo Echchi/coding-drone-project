@@ -13,6 +13,7 @@ const Code = () => {
         title={"실행하기"}
         onClick={() => setResult("hello")}
         disabled={codeInput.length === 0}
+        className="my-4"
       />
       <CodeResult result={result} />
     </>
