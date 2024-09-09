@@ -11,7 +11,7 @@ const Chat = () => {
         titleClassName={"bg-rose-500 ring-rose-500"}
         divClassName={"grow flex flex-col w-full h-1/3 ring-rose-500"}
       >
-        <div className="grow relative rounded-b-lg ">
+        <div className="grow relative rounded-b-lg py-2">
           <div className="h-full max-h-48 w-full pt-3 pb-12 px-2 flex flex-col space-y-2 *:py-2 *:px-3 *:w-fit *:font-semibold *:rounded-full odd:self-end overflow-y-auto">
             <div className="rounded-lg bg-rose-100 self-end">
               선생님 질문있습니다

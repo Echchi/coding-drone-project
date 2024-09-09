@@ -9,7 +9,7 @@ const DroneInfo = ({ isOn }: { isOn: boolean }) => {
       <div
         className={cls(
           "w-5 aspect-square rounded-full",
-          isOn ? "bg-green-500" : "bg-neutral-500",
+          isOn ? "bg-lime-500" : "bg-neutral-500",
         )}
       />
       <div className="flex w-full px-2">

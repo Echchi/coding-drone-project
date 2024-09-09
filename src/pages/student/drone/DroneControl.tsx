@@ -32,7 +32,7 @@ const DroneControl = ({ isOn, setIsOn }: IDroneControlProps) => {
               )}
             </AnimatePresence>
           </div>
-          <div className="flex flex-col items-center my-3">
+          <div className="flex flex-col items-center my-3 ml-3">
             <span className="w-full text-blue-700 mb-3">
               Roll <span className="font-bold">{roll}</span>
             </span>
@@ -44,14 +44,14 @@ const DroneControl = ({ isOn, setIsOn }: IDroneControlProps) => {
             />
           </div>
         </div>
-        <div className="absolute top-2 right-2 w-2/12 flex flex-col items-center">
+        <div className="absolute right-2 w-2/12 flex flex-col items-center">
           <span className="text-center text-blue-700">
             Pitch <span className="font-bold">{pitch}</span>
           </span>
 
           <input
             type={"range"}
-            className="absolute w-[18vh] top-28 rotate-90 origin-center bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-blue-500 h-2"
+            className="absolute w-[16vh] top-32 rotate-90 origin-center bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-blue-500 h-2"
             disabled={!isOn}
             value={100 - pitch}
             min={0}
