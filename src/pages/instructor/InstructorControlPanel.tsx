@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 const InstructorControlPanel = () => {
   const [division, setDivision] = useState("4x3");
   const [isControlOpen, setIsControlOpen] = useState(false);
+  const [isAllCodeStop, setIsAllCodeStop] = useState(false);
+  const [isAllDroneStop, setIsAllDroneStop] = useState(false);
   return (
     <div
       className="w-full h-full bg-amber-50 rounded-lg shadow flex flex-col pt-2 pb-4 px-4 mx-10"
@@ -13,7 +15,7 @@ const InstructorControlPanel = () => {
       <div className="w-full text-4xl font-dunggeunmiso-b text-center text-lime-600 py-4">
         코딩 드론 플랫폼 <span className="text-xl">(강사)</span>
       </div>
-      <div className="h-14 w-full flex items-center justify-between">
+      <div className="h-20 px-4 w-full flex items-center justify-between rounded-lg bg-orange-100 shadow-lg">
         <div className="h-full flex items-center space-x-4">
           <select
             className="rounded-lg py-3 shadow px-5 text-lg font-semibold outline-none"
@@ -30,25 +32,29 @@ const InstructorControlPanel = () => {
             </option>
           </select>
 
-          <button className="py-3 px-4 font-semibold text-lg bg-lime-500 text-white rounded-xl shadow-lg">
+          <button className="py-3 px-4 font-semibold text-lg bg-white rounded-xl shadow-lg">
             전체
           </button>
-          <button className="py-3 px-4 font-semibold text-lg bg-red-500 text-white rounded-xl shadow-lg">
+          <button className="py-3 px-4 font-semibold text-lg bg-rose-100 text-rose-600 rounded-xl shadow-lg">
+            <span className="w-3 aspect-square bg-red-500 inline-block mr-2 rounded-full" />
             이상있음
           </button>
-          <button className="py-3 px-4 font-semibold text-lg bg-neutral-500 text-white rounded-xl shadow-lg">
+          <button className="py-3 px-4 font-semibold text-lg bg-stone-100 text-stone-500 rounded-xl shadow-lg">
+            <span className="w-3 aspect-square bg-stone-500 inline-block mr-2 rounded-full" />
             연결안됨
           </button>
-          <button className="py-3 px-4 font-semibold text-lg bg-orange-500 text-white rounded-xl shadow-lg">
+          <button className="py-3 px-4 font-semibold text-lg bg-amber-100 text-amber-600 rounded-xl shadow-lg">
+            <span className="w-3 aspect-square bg-amber-500 inline-block mr-2 rounded-full" />
             질문있어요
           </button>
         </div>
+
         <div className="relative">
           <button
-            className="py-3 px-6 font-semibold text-lg bg-neutral-50 text-neutral-500 rounded-xl shadow-lg"
+            className="py-3 px-6 font-semibold text-lg bg-stone-50 text-stone-500 rounded-xl shadow-lg"
             onClick={() => setIsControlOpen(!isControlOpen)}
           >
-            일괄제어
+            전체제어
           </button>
 
           <AnimatePresence mode="popLayout">
@@ -61,23 +67,13 @@ const InstructorControlPanel = () => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <div className="top-14 right-0 rounded-lg absolute bg-neutral-50 w-72 h-[70vh] shadow-lg">
-                  <div className="h-4/5 overflow-y-auto">
-                    {Array.from({ length: 12 }, (_, index) => (
-                      <p
-                        className="w-full flex items-center h-16 px-5 cursor-pointer"
-                        key={`control_list_${index + 1}`}
-                      >
-                        <input
-                          type="checkbox"
-                          className="outline-none accent-lime-600 size-5"
-                        />
-                        <span className="text-xl text-center pl-10">
-                          학생 {index}
-                        </span>
-                      </p>
-                    ))}
-                  </div>
+                <div className="top-14 right-0 rounded-lg absolute bg-stone-50 w-48 h-fit shadow-lg flex flex-col justify-center items-center space-y-4 p-4">
+                  <button className="py-3 w-full font-semibold text-lg bg-blue-500 text-white rounded-xl shadow-lg">
+                    코드실행중단
+                  </button>
+                  <button className="py-3 w-full font-semibold text-lg bg-green-500 text-white rounded-xl shadow-lg">
+                    드론제어중단
+                  </button>
                 </div>
               </motion.div>
             )}
@@ -87,7 +83,7 @@ const InstructorControlPanel = () => {
       <div className="flex grow mt-3">
         <div
           className={cls(
-            "w-full h-full grid *:bg-neutral-200 gap-3",
+            "w-full h-full grid *:bg-stone-200 gap-3",
             division === "4x3"
               ? "grid-cols-4 grid-rows-3"
               : division === "4x4"
