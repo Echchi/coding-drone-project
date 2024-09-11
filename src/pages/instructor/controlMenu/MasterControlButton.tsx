@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Modal from "../../../sahred/Modal.tsx";
+import NotificationModal from "../../../widget/NotificationModal.tsx";
 import { cls } from "../../../sahred/utils/cls.ts";
 import { useRecoilState } from "recoil";
 import {
@@ -68,7 +68,9 @@ const MasterControlButton = () => {
           )}
         </AnimatePresence>
       </div>
-      {modalContent && <Modal content={`모든 학생의 ${modalContent}`} />}
+      {modalContent && (
+        <NotificationModal content={`모든 학생의 ${modalContent}`} />
+      )}
     </>
   );
 };

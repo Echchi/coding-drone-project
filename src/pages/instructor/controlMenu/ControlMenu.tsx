@@ -1,5 +1,4 @@
-import React, { SetStateAction, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import  { SetStateAction, useState } from "react";
 import MasterControlButton from "./MasterControlButton.tsx";
 interface IMenu {
   setDivision: React.Dispatch<SetStateAction<string>>;

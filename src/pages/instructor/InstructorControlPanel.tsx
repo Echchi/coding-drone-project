@@ -9,7 +9,7 @@ const InstructorControlPanel = () => {
 
   return (
     <div
-      className="w-full h-full bg-amber-50 rounded-lg shadow flex flex-col pt-2 pb-4 px-4 mx-10"
+      className="w-full h-full bg-amber-50 rounded-lg shadow flex flex-col pt-2 pb-4 px-4 mx-10 relative"
       style={{ height: "calc(100vh - 4rem)" }}
     >
       <div className="w-full text-4xl font-dunggeunmiso-b text-center text-lime-600 py-4">

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { cls } from "./utils/cls.ts";
+import { cls } from "../sahred/utils/cls.ts";
 import { isInteger } from "lodash";
 interface IModal {
   content: string;
 
   className?: string;
 }
-const Modal = ({ content, className }: IModal) => {
+const NotificationModal = ({ content, className }: IModal) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -50,4 +50,4 @@ const Modal = ({ content, className }: IModal) => {
   );
 };
 
-export default Modal;
+export default NotificationModal;
