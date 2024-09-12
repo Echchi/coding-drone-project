@@ -6,7 +6,7 @@ const Layout = () => {
     <div className="w-full h-dvh bg-lime-600 flex justify-center items-center">
       <Outlet />
       <div className="absolute bottom-0 left-0 p-4">
-        <img className="w-10" src="/public/assets/logo.png" alt="Logo" />
+        <img className="w-10" src="/assets/logo.png" alt="Logo" />
       </div>
     </div>
   );
