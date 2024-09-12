@@ -22,18 +22,18 @@ const MasterControlButton = () => {
   const handleClickCodeActive = () => {
     setAllStudentsCodeActive(!allStudentsCodeActive);
     if (allStudentsCodeActive) {
-      setModalContent("코드 실행 버튼이 활성화 됩니다");
-    } else {
       setModalContent("코드 실행 버튼이 비활성화 됩니다");
+    } else {
+      setModalContent("코드 실행 버튼이 활성화 됩니다");
     }
   };
   const handleClickDroneActive = () => {
     setAllStudentsDroneActive(!allStudentsDroneStop);
 
     if (allStudentsDroneStop) {
-      setModalContent("드론 제어 버튼이 활성화 됩니다");
-    } else {
       setModalContent("드론 제어 버튼이 비활성화 됩니다");
+    } else {
+      setModalContent("드론 제어 버튼이 활성화 됩니다");
     }
   };
 

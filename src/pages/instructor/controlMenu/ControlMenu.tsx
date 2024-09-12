@@ -29,10 +29,7 @@ const ControlMenu = ({ setDivision }: IMenu) => {
           <span className="w-3 aspect-square bg-red-500 inline-block mr-2 rounded-full" />
           이상있음
         </button>
-        {/*<button className="py-3 px-4 font-semibold text-lg bg-amber-100 text-amber-600 rounded-xl shadow-lg">*/}
-        {/*  <span className="w-3 aspect-square bg-amber-500 inline-block mr-2 rounded-full" />*/}
-        {/*  질문있어요*/}
-        {/*</button>*/}
+
       </div>
 
       <MasterControlButton />

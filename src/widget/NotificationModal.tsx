@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../sahred/utils/cls.ts";
 import { isInteger } from "lodash";
@@ -28,20 +28,19 @@ const NotificationModal = ({ content, className }: IModal) => {
     <AnimatePresence mode="popLayout">
       {isOpen && (
         <motion.div
-          id={`alarm`}
-          key={`alarm`}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
+          key={`notice_${content}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          style={{
-            top: "50%",
-            left: "43%",
-          }}
           className={cls(
-            "fixed z-30 bg-white shadow-xl py-5 rounded-lg flex items-center justify-center w-96",
+            "fixed z-30 bg-white shadow-2xl py-5 rounded-lg flex items-center justify-center w-96",
             className ? className : "font-bold text-xl",
           )}
+          style={{
+            transform: "translate(-50%, -50%)",
+            top: "50%",
+            left: "50%",
+          }}
         >
           <div>{content}</div>
         </motion.div>

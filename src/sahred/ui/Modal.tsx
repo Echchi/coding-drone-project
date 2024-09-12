@@ -84,7 +84,7 @@ const Modal = ({
           transition={{ duration: 0.3 }}
           onMouseDown={handleBackgroundMouseDown}
           onMouseUp={handleBackgroundMouseUp}
-          className="fixed w-full h-full flex bg-black/40 items-center justify-center z-50"
+          className="fixed w-full h-full flex bg-black/70 items-center justify-center z-50"
         >
           <div
             className={cls(
