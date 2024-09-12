@@ -8,23 +8,12 @@ html, body {
     @apply text-stone-800 select-none;
 }
 
-@layer components {
-    .gradient-ring {
-        position: relative;
-        background: linear-gradient(to right, blue 50%, green 50%);
-        padding: 2px;
-    }
-    .gradient-ring::before {
-        content: "";
-        position: absolute;
-        top: -2px;
-        right: -2px;
-        bottom: -2px;
-        left: -2px;
-        background: white;
-        border-radius: inherit;
-        z-index: -1;
-    }
+button {
+    @apply outline-none
+}
+
+input {
+    @apply outline-none
 }
 
 /* error */
