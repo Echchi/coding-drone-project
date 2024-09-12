@@ -1,13 +1,13 @@
 @font-face {
     font-family: 'DunggeunmisoB';
-    src: url('../assets/fonts/DunggeunmisoTTFB.ttf') format('truetype');
+    src: url('../../public/assets/fonts/DunggeunmisoTTFB.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'DunggeunmisoR';
-    src: url('../assets/fonts/DunggeunmisoTTFR.ttf') format('truetype');
+    src: url('../../public/assets/fonts/DunggeunmisoTTFR.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -21,7 +21,7 @@
 
 @font-face {
     font-family: 'JetBrainsMono';
-    src: url('../assets/fonts/JetBrainsMono.woff2') format('woff');
+    src: url('../../public/assets/fonts/JetBrainsMono.woff2') format('woff');
     font-weight: normal;
     font-style: normal;
 }
