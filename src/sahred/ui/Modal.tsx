@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../utils/cls.ts";
+import { faCircleXmark, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface ModalProps {
   title: string;
@@ -35,7 +37,7 @@ const Modal = ({
         setIsOpen(false);
 
         onClose();
-      }, 200);
+      }, 300);
     }
     setIsMouseDownOnBackdrop(false);
   };
@@ -63,12 +65,11 @@ const Modal = ({
   }, [isOpen]);
 
   const handleClose = (event: React.MouseEvent) => {
-    // event.preventDefault();
-
+    // 모달 닫기 애니메이션이 끝난 후 닫기 처리
+    setIsOpen(false);
     setTimeout(() => {
-      setIsOpen(false);
       onClose();
-    }, 200);
+    }, 300); // 애니메이션 시간과 일치하게 설정
   };
 
   if (!isOpen) return null;
@@ -83,25 +84,33 @@ const Modal = ({
           transition={{ duration: 0.3 }}
           onMouseDown={handleBackgroundMouseDown}
           onMouseUp={handleBackgroundMouseUp}
-          className="fixed w-full h-full flex !bg-yellow-400 items-center justify-center z-50"
+          className="fixed w-full h-full flex bg-black/40 items-center justify-center z-50"
         >
           <div
             className={cls(
-              "bg-white p-4 w-1/2 min-h-fit relative rounded-lg overflow-y-auto bg-pink-600",
+              "pt-2 mx-20 w-full h-[90%] relative rounded-lg overflow-y-auto bg-amber-100 shadow-lg min-h-fit",
+
               className ? className : "",
             )}
+            // style={{ height: "calc(100vh - 3rem)" }}
           >
-            <button
-              data-testid={"close-button"}
-              onClick={(event: React.MouseEvent) => handleClose(event)}
-              className="absolute top-4 right-4 text-2xl"
-              type="button"
-            >
-              &times;
-            </button>
-            <h2 className="text-lg font-semibold">{title}</h2>
-
-            <div>{content || children}</div>
+            <div className="border-t-lg flex justify-between items-center w-full px-6 pt-1">
+              <h2 className="text-2xl font-semibold text-lime-700 font-dunggeunmiso-b">
+                {title}
+              </h2>
+              <button
+                onClick={(event: React.MouseEvent) => handleClose(event)}
+                type="button"
+              >
+                <FontAwesomeIcon
+                  icon={faCircleXmark}
+                  className="size-6 text-lime-600"
+                />
+              </button>
+            </div>
+            <div className="rounded-lg my-3 mx-6 p-4 bg-white shadow">
+              {content || children}
+            </div>
           </div>
         </motion.div>
       )}

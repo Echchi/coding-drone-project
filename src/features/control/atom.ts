@@ -8,3 +8,10 @@ export const allStudentsDroneActiveState = atom({
   key: "allDroneActiveState",
   default: true,
 });
+export const selectedScreenState = atom({
+  key: "selectedScreenState",
+  default: {
+    id: 0,
+    name: "",
+  },
+});

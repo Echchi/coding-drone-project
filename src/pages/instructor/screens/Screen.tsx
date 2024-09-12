@@ -1,43 +1,57 @@
-import React, { useEffect, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { cls } from "../../../sahred/utils/cls.ts";
 import ControlButtons from "./ControlButtons.tsx";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   allStudentsCodeActiveState,
   allStudentsDroneActiveState,
+  selectedScreenState,
 } from "../../../features/control/atom.ts";
-import Modal from "../../../sahred/ui/Modal.tsx";
-import Workspace from "../../student/Workspace.tsx";
 
-const Screen = ({ index }: { index: number }) => {
+interface IScreenProps {
+  index: number;
+}
+
+const Screen = ({ index }: IScreenProps) => {
   const allStudentsCodeActive = useRecoilValue(allStudentsCodeActiveState);
   const allStudentsDroneActive = useRecoilValue(allStudentsDroneActiveState);
   const [codeActive, setCodeActive] = useState(true);
   const [droneActive, setDroneActive] = useState(true);
-  const [isWorkspaceOpen, setIsWorkspaceOpen] = useState(false);
+  const setSelectedStudent = useSetRecoilState(selectedScreenState);
+
   useEffect(() => {
     setCodeActive(allStudentsCodeActive);
   }, [allStudentsCodeActive]);
   useEffect(() => {
     setDroneActive(allStudentsDroneActive);
   }, [allStudentsDroneActive]);
-  const handleClickScreen = () => {
-    setIsWorkspaceOpen(true);
+  const handleClickScreen = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    setSelectedStudent((prev) => ({
+      ...prev,
+      id: index + 1,
+      name: `학생 ${index + 1}`,
+    }));
   };
   return (
     <>
-      {isWorkspaceOpen && (
-        <Modal onClose={() => setIsWorkspaceOpen} content={"우잉"} />
-      )}
       <div
         key={`screen_${index}`}
         className={cls(
-          "w-full h-full rounded-lg shadow-lg flex flex-col transition-all cursor-pointer hover:scale-105 hover:shadow-xl",
+          "w-full h-full rounded-lg shadow-lg flex flex-col transition-all cursor-pointer hover:scale-[103%] hover:shadow-xl",
           !codeActive && !droneActive ? "ring ring-cyan-500" : "",
-          codeActive ? "" : "ring ring-blue-500",
-          droneActive ? "" : "ring ring-green-500",
+          codeActive
+            ? ""
+            : !droneActive
+              ? "ring ring-cyan-500"
+              : "ring ring-blue-500",
+          droneActive
+            ? ""
+            : !codeActive
+              ? "ring ring-cyan-500"
+              : "ring ring-green-500",
         )}
-        onClick={handleClickScreen}
+        onClick={(event) => handleClickScreen(event)}
       >
         <div className="w-full h-9 rounded-t-lg flex justify-between items-center px-3 bg-gray-100">
           <span className="font-semibold">학생 {index + 1}</span>

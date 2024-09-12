@@ -22,7 +22,10 @@ const ControlButtons = ({
           codeActive ? "bg-blue-500 text-white" : "bg-blue-200 text-blue-600",
           isSmall ? "py-1 text-xs" : "py-3 text-lg",
         )}
-        onClick={() => handleCodeOnClick()}
+        onClick={(event) => {
+          event.stopPropagation();
+          handleCodeOnClick();
+        }}
       >
         코드 {codeActive ? "비활성화" : "활성화"}
       </button>
@@ -34,7 +37,10 @@ const ControlButtons = ({
             : "bg-green-200 text-green-600",
           isSmall ? "py-1 text-xs" : "py-3 text-lg",
         )}
-        onClick={() => handleDroneOnClick()}
+        onClick={(event) => {
+          event.stopPropagation();
+          handleDroneOnClick();
+        }}
       >
         드론 {droneActive ? "비활성화" : "활성화"}
       </button>

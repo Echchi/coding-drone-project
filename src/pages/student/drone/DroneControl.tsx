@@ -16,8 +16,8 @@ const DroneControl = ({ isOn, setIsOn }: IDroneControlProps) => {
     <div className="grow flex flex-col relative mt-4">
       <div className="flex relative">
         <div className="w-2/3 flex flex-col">
-          <div className="max-w-[12vw] aspect-square p-3 ml-12 relative">
-            <img src="/src/assets/icon/drone.png" className="" />
+          <div className="w-8/12 aspect-square p-3 ml-12 relative">
+            <img src="/src/assets/icon/drone.png" />
             <AnimatePresence mode="popLayout">
               {!isOn && (
                 <motion.div

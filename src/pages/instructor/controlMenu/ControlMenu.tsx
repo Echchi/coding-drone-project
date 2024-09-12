@@ -1,11 +1,11 @@
-import  { SetStateAction, useState } from "react";
+import { SetStateAction, useState } from "react";
 import MasterControlButton from "./MasterControlButton.tsx";
 interface IMenu {
   setDivision: React.Dispatch<SetStateAction<string>>;
 }
 const ControlMenu = ({ setDivision }: IMenu) => {
   return (
-    <div className="h-20 px-4 w-full flex items-center justify-between rounded-lg bg-orange-100 shadow-lg">
+    <div className="h-16 px-4 w-full flex items-center justify-between">
       <div className="h-full flex items-center space-x-4">
         <select
           className="rounded-lg py-3 shadow px-5 text-lg font-semibold outline-none"
@@ -29,10 +29,10 @@ const ControlMenu = ({ setDivision }: IMenu) => {
           <span className="w-3 aspect-square bg-red-500 inline-block mr-2 rounded-full" />
           이상있음
         </button>
-        <button className="py-3 px-4 font-semibold text-lg bg-amber-100 text-amber-600 rounded-xl shadow-lg">
-          <span className="w-3 aspect-square bg-amber-500 inline-block mr-2 rounded-full" />
-          질문있어요
-        </button>
+        {/*<button className="py-3 px-4 font-semibold text-lg bg-amber-100 text-amber-600 rounded-xl shadow-lg">*/}
+        {/*  <span className="w-3 aspect-square bg-amber-500 inline-block mr-2 rounded-full" />*/}
+        {/*  질문있어요*/}
+        {/*</button>*/}
       </div>
 
       <MasterControlButton />
