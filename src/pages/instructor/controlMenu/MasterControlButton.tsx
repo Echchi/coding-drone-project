@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import NotificationModal from "../../../widget/NotificationModal.tsx";
-import { cls } from "../../../sahred/utils/cls.ts";
+import { cls } from "../../../shared/utils/cls.ts";
 import { useRecoilState } from "recoil";
 import {
   allStudentsCodeActiveState,
   allStudentsDroneActiveState,
-} from "../../../features/control/atom.ts";
+} from "../../../shared/state/atom.ts";
 import ControlButtons from "../screens/ControlButtons.tsx";
 
 const MasterControlButton = () => {

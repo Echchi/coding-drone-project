@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { cls } from "../../sahred/utils/cls.ts";
+import { cls } from "../../shared/utils/cls.ts";
 import { AnimatePresence, motion } from "framer-motion";
 import ControlMenu from "./controlMenu/ControlMenu.tsx";
 import ScreenGrid from "./screens/ScreenGrid.tsx";
-import Modal from "../../sahred/ui/Modal.tsx";
+import Modal from "../../shared/ui/Modal.tsx";
 import { useRecoilState } from "recoil";
-import { selectedScreenState } from "../../features/control/atom.ts";
+import { selectedScreenState } from "../../shared/state/atom.ts";
 import WorkspaceContent from "../student/workspaceContent.tsx";
 
 const InstructorControlPanel = () => {
