@@ -1,50 +1,19 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash";
 import Input from "../../../shared/ui/Input.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
-import { AnimatePresence, motion } from "framer-motion";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import MainButton from "../../../shared/ui/MainButton.tsx";
+import { useInstructorLogin } from "../../../features/instructor/hooks/useInstructorLogin.ts";
 
 const InstructorLogin = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
-    id: "",
-    password: "",
-  });
-  const [error, setError] = useState("");
-  const [accountCheck, setAccountCheck] = useState(false);
-
-  const handleOnChangeLonginInfo = (value: string, type: "id" | "password") => {
-    if (value.length === 0) {
-      setError("");
-      setAccountCheck(false);
-    }
-    debounceCode(value.trim(), type);
-  };
-
-  const debounceCode = useMemo(() => {
-    return debounce((value: string, type: "id" | "password") => {
-      setForm((prev) => ({ ...prev, [type]: value }));
-    }, 500);
-  }, []);
-
-  useEffect(() => {
-    if (form.id.length === 0 || form.password.length === 0) return;
-    if (form.id === "test" && form.password === "password") {
-      localStorage.setItem("role", "instructor");
-      setAccountCheck(true);
-      setError("");
-    } else {
-      setError("계정을 확인해주세요");
-    }
-  }, [form]);
+  const { loginParams, error, accountCheck, handleOnChangeLonginInfo } =
+    useInstructorLogin();
 
   const handleLoginOnClick = () => {
     if (accountCheck) {
-      localStorage.setItem("name", "강사");
       navigate("/control");
     }
   };
@@ -58,9 +27,9 @@ const InstructorLogin = () => {
           icon={<FontAwesomeIcon icon={faUser} />}
           placeholder="아이디"
           onChange={(event) =>
-            handleOnChangeLonginInfo(event.target.value, "id")
+            handleOnChangeLonginInfo(event.target.value, "userid")
           }
-          value={form.id}
+          value={loginParams.userid}
           errorMessage={error}
         />
         <Input
@@ -71,7 +40,7 @@ const InstructorLogin = () => {
           onChange={(event) =>
             handleOnChangeLonginInfo(event.target.value, "password")
           }
-          value={form.password}
+          value={loginParams.password}
           errorMessage={error}
         />
       </div>
@@ -82,8 +51,8 @@ const InstructorLogin = () => {
         className={"!mt-6"}
         disabled={
           !accountCheck ||
-          form.id.trim().length === 0 ||
-          form.password.trim().length === 0
+          loginParams.userid.trim().length === 0 ||
+          loginParams.password.trim().length === 0
         }
       />
     </div>

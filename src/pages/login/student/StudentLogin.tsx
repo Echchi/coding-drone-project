@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import MainButton from "../../../shared/ui/MainButton.tsx";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash";
+import debounce from "../../../shared/utils/debounce.ts";
 
 const StudentLogin = () => {
   const navigate = useNavigate();

@@ -4,7 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 html, body {
-    font-family: 'pretendard', sans-serif;
+    font-family: 'Pretendard', sans-serif;
     @apply text-stone-800 select-none;
 }
 

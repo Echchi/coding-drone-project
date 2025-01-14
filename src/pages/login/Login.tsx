@@ -13,7 +13,7 @@ const Login = () => {
   };
 
   return (
-    <div className="relative min-w-fit w-1/3 min-h-fit h-1/2 m-auto bg-amber-50 rounded-lg shadow flex flex-col justify-center items-center py-5">
+    <div className="relative w-full lg:w-1/3 min-h-96 h-1/2 m-auto bg-amber-50 rounded-lg shadow flex flex-col justify-center items-center py-5">
       <p className="w-full text-4xl font-dunggeunmiso-b text-center text-lime-600">
         코딩 드론 플랫폼
         {role === "instructor" && <span className="text-xl">(강사)</span>}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../shared/utils/cls.ts";
-import { isInteger } from "lodash";
+
 interface IModal {
   content: string;
 
