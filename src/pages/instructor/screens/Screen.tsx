@@ -1,12 +1,12 @@
 import React, { SetStateAction, useEffect, useState } from "react";
-import { cls } from "../../../sahred/utils/cls.ts";
+import { cls } from "../../../shared/utils/cls.ts";
 import ControlButtons from "./ControlButtons.tsx";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import {
   allStudentsCodeActiveState,
   allStudentsDroneActiveState,
   selectedScreenState,
-} from "../../../features/control/atom.ts";
+} from "../../../shared/state/atom.ts";
 
 interface IScreenProps {
   index: number;

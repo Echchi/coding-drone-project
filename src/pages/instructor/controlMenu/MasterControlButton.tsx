@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import NotificationModal from "../../../widget/NotificationModal.tsx";
-import { cls } from "../../../sahred/utils/cls.ts";
+import { cls } from "../../../shared/utils/cls.ts";
 import { useRecoilState } from "recoil";
 import {
   allStudentsCodeActiveState,
   allStudentsDroneActiveState,
-} from "../../../features/control/atom.ts";
+} from "../../../shared/state/atom.ts";
 import ControlButtons from "../screens/ControlButtons.tsx";
+interface IMasterControlButton {
+  isCreated: boolean;
+}
 
-const MasterControlButton = () => {
+const MasterControlButton = ({ isCreated }: IMasterControlButton) => {
   const [isControlOpen, setIsControlOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [allStudentsCodeActive, setAllStudentsCodeActive] = useRecoilState(
@@ -41,8 +44,9 @@ const MasterControlButton = () => {
     <>
       <div className="relative">
         <button
-          className="py-3 px-6 font-semibold text-lg bg-stone-50 text-stone-500 rounded-xl shadow-lg"
+          className="py-3 px-6 font-semibold text-lg bg-stone-50 text-stone-500 rounded-xl shadow-lg disabledBtn"
           onClick={() => setIsControlOpen(!isControlOpen)}
+          disabled={!isCreated}
         >
           전체제어
         </button>

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import Input from "../../../sahred/ui/Input.tsx";
+import Input from "../../../shared/ui/Input.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 import { AnimatePresence, motion } from "framer-motion";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import MainButton from "../../../sahred/ui/MainButton.tsx";
+import MainButton from "../../../shared/ui/MainButton.tsx";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash";
+import debounce from "../../../shared/utils/debounce.ts";
 
 const StudentLogin = () => {
   const navigate = useNavigate();

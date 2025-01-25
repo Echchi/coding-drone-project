@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { cls } from "../../../sahred/utils/cls.ts";
+import { cls } from "../../../shared/utils/cls.ts";
 import ControlButtons from "./ControlButtons.tsx";
 import code from "../../student/code/Code.tsx";
 import Screen from "./Screen.tsx";
-import Modal from "../../../sahred/ui/Modal.tsx";
+import Modal from "../../../shared/ui/Modal.tsx";
 
 const ScreenGrid = ({ division }: { division: string }) => {
   return (

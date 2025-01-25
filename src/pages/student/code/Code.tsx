@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CodeEditor from "./codeEditor/CodeEditor.tsx";
-import MainButton from "../../../sahred/ui/MainButton.tsx";
+import MainButton from "../../../shared/ui/MainButton.tsx";
 import CodeResult from "./codeResult/CodeResult.tsx";
 
 const Code = () => {

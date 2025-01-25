@@ -1,5 +1,5 @@
 import React, { SetStateAction, useState } from "react";
-import { cls } from "../../../sahred/utils/cls.ts";
+import { cls } from "../../../shared/utils/cls.ts";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 
