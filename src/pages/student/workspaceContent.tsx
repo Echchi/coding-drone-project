@@ -1,7 +1,7 @@
 import React from "react";
 import Code from "./code/Code.tsx";
 import Drone from "./drone/Drone.tsx";
-import Chat from "./chat/chat.tsx";
+import Chat from "./chat/Chat.tsx";
 
 const WorkspaceContent = () => {
   return (

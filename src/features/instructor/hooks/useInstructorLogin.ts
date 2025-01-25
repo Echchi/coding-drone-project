@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import debounce from "../../../shared/utils/debounce.ts";
+import { useState } from "react";
 import { useLogin } from "./useLogin.ts";
-import login from "../../../pages/login/Login.tsx";
 import { ILoginParams } from "../../../shared/types/instructor.ts";
+import { MESSAGES } from "../../../shared/constants/messages.ts";
+import { useNavigate } from "react-router-dom";
 
 export const useInstructorLogin = () => {
   const [loginParams, setLoginParams] = useState<ILoginParams>({
@@ -11,49 +10,43 @@ export const useInstructorLogin = () => {
     password: "",
   });
   const [error, setError] = useState("");
-  const [accountCheck, setAccountCheck] = useState(false);
+  // const [accountCheck, setAccountCheck] = useState(false);
   const { mutate } = useLogin();
+  const navigate = useNavigate();
   const handleOnChangeLonginInfo = (
     value: string,
     type: "userid" | "password",
   ) => {
     if (value.length === 0) {
+      setError(MESSAGES.AUTH_ERROR.REQUIRED_FIELDS);
+    } else {
       setError("");
-      setAccountCheck(false);
+      setLoginParams((prev) => ({ ...prev, [type]: value }));
     }
-    debounceCode(value.trim(), type);
   };
 
-  const debounceCode = useMemo(() => {
-    return debounce((value: string, type: "userid" | "password") => {
-      setLoginParams((prev) => ({ ...prev, [type]: value }));
-    }, 500);
-  }, []);
-
-  useEffect(() => {
+  const handleLoginOnClick = () => {
     if (loginParams.userid.length === 0 || loginParams.password.length === 0)
       return;
-    console.log(loginParams.userid, loginParams.password);
+
     mutate(
       { userid: loginParams.userid, password: loginParams.password },
       {
         onSuccess: () => {
-          setAccountCheck(true);
           setError("");
+          navigate("/control");
         },
         onError: () => {
-          setError("계정을 확인해주세요");
+          setError(MESSAGES.AUTH_ERROR.INVALID_CREDENTIALS);
         },
       },
     );
-  }, [loginParams]);
+  };
 
   return {
     loginParams,
     error,
-    accountCheck,
     handleOnChangeLonginInfo,
-    setError,
-    setAccountCheck,
+    handleLoginOnClick,
   };
 };

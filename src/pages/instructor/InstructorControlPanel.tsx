@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { cls } from "../../shared/utils/cls.ts";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ControlMenu from "./controlMenu/ControlMenu.tsx";
 import ScreenGrid from "./screens/ScreenGrid.tsx";
@@ -7,11 +6,13 @@ import Modal from "../../shared/ui/Modal.tsx";
 import { useRecoilState } from "recoil";
 import { selectedScreenState } from "../../shared/state/atom.ts";
 import WorkspaceContent from "../student/workspaceContent.tsx";
+import CreateLecture from "./screens/CreateLecture.tsx";
 
 const InstructorControlPanel = () => {
   const [division, setDivision] = useState("4x3");
   const [selectedStudent, setSelectedStudent] =
     useRecoilState(selectedScreenState);
+  const [isCreated, setIsCreated] = useState(false);
   return (
     <>
       <AnimatePresence>
@@ -32,9 +33,9 @@ const InstructorControlPanel = () => {
         <div className="w-full text-4xl font-dunggeunmiso-b text-center text-lime-600 py-4">
           코딩 드론 플랫폼 <span className="text-xl">(강사)</span>
         </div>
-        <ControlMenu setDivision={setDivision} />
+        <ControlMenu setDivision={setDivision} isCreated={isCreated} />
         <div className="flex grow mt-3">
-          <ScreenGrid division={division} />
+          {isCreated ? <ScreenGrid division={division} /> : <CreateLecture />}
         </div>
       </div>
     </>
