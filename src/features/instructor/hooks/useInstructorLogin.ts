@@ -32,7 +32,9 @@ export const useInstructorLogin = () => {
     mutate(
       { userid: loginParams.userid, password: loginParams.password },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          console.log("access_token", data.access_token);
+          localStorage.setItem("access_token", data.access_token);
           setError("");
           navigate("/control");
         },
