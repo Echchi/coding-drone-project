@@ -6,11 +6,5 @@ export const useCreateLecture = () => {
   return useMutation({
     mutationFn: (params: ICreateLectureParams) =>
       lectureApi.createLecture(params),
-    onSuccess: (data) => {
-      console.log("data", data);
-    },
-    onError: (error) => {
-      console.error("error", error);
-    },
   });
 };

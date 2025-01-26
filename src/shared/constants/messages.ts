@@ -4,7 +4,7 @@ export const MESSAGES = {
     REQUIRED_FIELDS: "아이디와 비밀번호를 입력해주세요.",
   },
   COMMON_ERROR: {
-    UNKNOWN: "알 수 없는 오류가 발생했습니다.",
+    UNKNOWN: "문제가 발생했습니다. 새로고침 후 다시 시도해주세요",
     NETWORK: "네트워크 문제로 요청을 처리할 수 없습니다.",
   },
 };

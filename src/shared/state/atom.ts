@@ -15,3 +15,12 @@ export const selectedScreenState = atom({
     name: "",
   },
 });
+
+export const codeState = atom({
+  key: "codeState",
+  default: "",
+});
+export const codeModalState = atom({
+  key: "codeModalState",
+  default: false,
+});

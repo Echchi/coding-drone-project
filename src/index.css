@@ -21,6 +21,10 @@ input {
     @apply text-orange-400 font-bold my-1 ml-1 px-1 text-lg bg-transparent h-fit bg-white
 }
 
+.errorText{
+    @apply text-center text-orange-600 font-semibold text-lg
+}
+
 .disabledBtn{
     @apply disabled:shadow-none disabled:bg-stone-300 disabled:text-stone-500
 }
