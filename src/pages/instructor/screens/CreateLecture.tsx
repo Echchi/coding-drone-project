@@ -68,7 +68,7 @@ const CreateLecture = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               className={cls(
-                "fixed z-30 bg-white shadow py-5 rounded-lg flex items-center justify-center font-bold text-xl",
+                "fixed z-30 bg-white shadow py-5 rounded-lg flex items-center justify-center font-bold text-xl min-h-96",
                 savedCode ? "w-[80vh]" : "w-[60vh]",
               )}
               style={{
