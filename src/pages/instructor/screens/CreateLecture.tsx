@@ -102,7 +102,7 @@ const CreateLecture = () => {
                         savedCode ? "text-4xl" : "text-2xl ",
                       )}
                     >
-                      <span>수업 접속 코드</span>
+                      {/*<span>수업 접속 코드</span>*/}
                     </p>
 
                     <div className="w-full flex space-x-5">
