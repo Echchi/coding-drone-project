@@ -55,6 +55,8 @@ class TokenManager {
       } catch (error) {
         this.removeAccessToken();
         sessionStorage.removeItem("refresh_token");
+        sessionStorage.removeItem("code");
+        sessionStorage.removeItem("instructorId");
         window.location.href = "/";
         reject(error);
       } finally {
@@ -75,12 +77,10 @@ const tokenManager = TokenManager.getInstance();
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    let token = tokenManager.getAccessToken();
-
-    if (token && tokenManager.isTokenExpired(token)) {
-      token = await tokenManager.refreshAccessToken();
+    if (config.url === "/login") {
+      return config;
     }
-
+    const token = tokenManager.getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -93,9 +93,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.config.url === "/" && error.response?.status === 401) {
-      return Promise.reject(error);
-    }
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
