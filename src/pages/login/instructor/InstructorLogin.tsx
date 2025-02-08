@@ -46,11 +46,7 @@ const InstructorLogin = () => {
             loginParams.password.trim().length === 0
           }
         />
-        {error && (
-          <p className="text-center text-orange-600 font-semibold text-lg">
-            {error}
-          </p>
-        )}
+        {error && <p className="errorText">{error}</p>}
       </div>
     </>
   );

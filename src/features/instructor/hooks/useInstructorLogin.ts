@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLogin } from "./useLogin.ts";
+import { useLoginApi } from "./useLoginApi.ts";
 import { ILoginParams } from "../../../shared/types/instructor.ts";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
 import { useNavigate } from "react-router-dom";
@@ -10,8 +10,7 @@ export const useInstructorLogin = () => {
     password: "",
   });
   const [error, setError] = useState("");
-  // const [accountCheck, setAccountCheck] = useState(false);
-  const { mutate } = useLogin();
+  const { mutate } = useLoginApi();
   const navigate = useNavigate();
   const handleOnChangeLonginInfo = (
     value: string,
@@ -33,8 +32,8 @@ export const useInstructorLogin = () => {
       { userid: loginParams.userid, password: loginParams.password },
       {
         onSuccess: (data) => {
-          console.log("access_token", data.access_token);
-          localStorage.setItem("access_token", data.access_token);
+          sessionStorage.setItem("access_token", data.access_token);
+          sessionStorage.setItem("instructorId", data.instructorId);
           setError("");
           navigate("/control");
         },

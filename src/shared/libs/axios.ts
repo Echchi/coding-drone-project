@@ -45,15 +45,18 @@ class TokenManager {
 
     this.refreshPromise = new Promise(async (resolve, reject) => {
       try {
-        const refreshToken = localStorage.getItem("refresh_token");
-        const response = await axios.post("/refresh_token", { refreshToken });
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}/refresh_token`,
+        );
         const newAccessToken = response.data.access_token;
 
         this.setAccessToken(newAccessToken);
         resolve(newAccessToken);
       } catch (error) {
         this.removeAccessToken();
-        localStorage.removeItem("refresh_token");
+        sessionStorage.removeItem("refresh_token");
+        sessionStorage.removeItem("code");
+        sessionStorage.removeItem("instructorId");
         window.location.href = "/";
         reject(error);
       } finally {
@@ -74,12 +77,10 @@ const tokenManager = TokenManager.getInstance();
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    let token = tokenManager.getAccessToken();
-
-    if (token && tokenManager.isTokenExpired(token)) {
-      token = await tokenManager.refreshAccessToken();
+    if (config.url === "/login") {
+      return config;
     }
-
+    const token = tokenManager.getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -92,9 +93,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.config.url === "/login" && error.response?.status === 401) {
-      return Promise.reject(error);
-    }
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {

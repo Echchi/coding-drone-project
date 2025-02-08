@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import NotificationModal from "../../../widget/NotificationModal.tsx";
-import { cls } from "../../../shared/utils/cls.ts";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   allStudentsCodeActiveState,
   allStudentsDroneActiveState,
+  codeModalState,
+  codeState,
 } from "../../../shared/state/atom.ts";
 import ControlButtons from "../screens/ControlButtons.tsx";
-interface IMasterControlButton {
-  isCreated: boolean;
-}
 
-const MasterControlButton = ({ isCreated }: IMasterControlButton) => {
+const MasterControlButton = () => {
   const [isControlOpen, setIsControlOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
   const [allStudentsCodeActive, setAllStudentsCodeActive] = useRecoilState(
@@ -21,6 +19,10 @@ const MasterControlButton = ({ isCreated }: IMasterControlButton) => {
   const [allStudentsDroneStop, setAllStudentsDroneActive] = useRecoilState(
     allStudentsDroneActiveState,
   );
+  const [isOpen, setIsOpen] = useRecoilState(codeModalState);
+  const recoilSavedCode = useRecoilValue(codeState);
+  const sessionSavedCode = sessionStorage.getItem("code") || "";
+  const savedCode = sessionSavedCode || recoilSavedCode;
 
   const handleClickCodeActive = () => {
     setAllStudentsCodeActive(!allStudentsCodeActive);
@@ -42,11 +44,18 @@ const MasterControlButton = ({ isCreated }: IMasterControlButton) => {
 
   return (
     <>
-      <div className="relative">
+      <div className="relative space-x-4">
+        <button
+          className="py-3 px-6 font-semibold text-lg bg-stone-50 text-stone-500 rounded-xl shadow-lg disabledBtn"
+          onClick={() => setIsOpen(true)}
+          disabled={!savedCode}
+        >
+          접속 코드
+        </button>
         <button
           className="py-3 px-6 font-semibold text-lg bg-stone-50 text-stone-500 rounded-xl shadow-lg disabledBtn"
           onClick={() => setIsControlOpen(!isControlOpen)}
-          disabled={!isCreated}
+          disabled={!savedCode}
         >
           전체제어
         </button>

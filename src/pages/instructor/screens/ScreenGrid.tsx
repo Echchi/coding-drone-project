@@ -3,7 +3,7 @@ import { cls } from "../../../shared/utils/cls.ts";
 import ControlButtons from "./ControlButtons.tsx";
 import code from "../../student/code/Code.tsx";
 import Screen from "./Screen.tsx";
-import Modal from "../../../shared/ui/Modal.tsx";
+import AlertModal from "../../../shared/ui/AlertModal.tsx";
 
 const ScreenGrid = ({ division }: { division: string }) => {
   return (
