@@ -3,54 +3,25 @@ import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../../../shared/utils/cls.ts";
 import { useGenerateCodeApi } from "../../../features/lecture/hooks/useGenerateCodeApi.ts";
 import MainButton from "../../../shared/ui/MainButton.tsx";
-import { useCreateLecture } from "../../../features/lecture/hooks/useCreateLectureApi.ts";
+import { useCreateLecture } from "../../../features/lecture/hooks/useCreateLecture.ts";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { codeModalState, codeState } from "../../../shared/state/atom.ts";
+import { useInstructorLogin } from "../../../features/instructor/hooks/useInstructorLogin.ts";
 
 const CreateLecture = () => {
   const {
-    data,
-    isLoading: isGenerateCodeLoading,
+    isCreateLectureLoading,
+    isGenerateCodeLoading,
     refetch,
-  } = useGenerateCodeApi();
-  const { isLoading: isCreateLectureLoading, mutate } = useCreateLecture();
-
-  const recoilSavedCode = useRecoilValue(codeState);
-  const setSavedCode = useSetRecoilState(codeState);
-  const sessionSavedCode = sessionStorage.getItem("code") || "";
-  const savedCode = sessionSavedCode || recoilSavedCode;
-  const [isOpen, setIsOpen] = useRecoilState(codeModalState);
-  const [code, setCode] = useState("");
-
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!savedCode) setIsOpen(true);
-  }, []);
-
-  useEffect(() => {
-    if (!savedCode && data && data.code) {
-      setCode(data.code);
-    }
-  }, [data]);
-
-  const handleClickCreateButton = () => {
-    const instructorId = sessionStorage.getItem("instructorId");
-    mutate(
-      { instructorId, code },
-      {
-        onSuccess: (data) => {
-          sessionStorage.setItem("code", data.code);
-          setSavedCode(data.code);
-          setError("");
-        },
-        onError: () => {
-          setError(MESSAGES.AUTH_ERROR.INVALID_CREDENTIALS);
-        },
-      },
-    );
-  };
+    isOpen,
+    error,
+    savedCode,
+    setIsOpen,
+    handleClickCreateButton,
+    handleCloseModal,
+    code,
+  } = useCreateLecture();
 
   return (
     <div>
@@ -59,7 +30,7 @@ const CreateLecture = () => {
           <>
             <div
               className="absolute inset-0 w-full h-full bg-black/80 rounded-lg flex flex-col justify-center items-center text-white font-bold text-xl z-20"
-              onClick={() => (savedCode ? setIsOpen(false) : undefined)}
+              onClick={handleCloseModal}
             />
             <motion.div
               key={`create-lecture`}
