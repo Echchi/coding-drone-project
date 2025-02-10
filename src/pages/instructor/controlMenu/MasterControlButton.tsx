@@ -1,6 +1,6 @@
-import React, { SetStateAction, useState } from "react";
+import { SetStateAction, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import NotificationModal from "../../../widget/NotificationModal.tsx";
+import NotificationModal from "../../../shared/ui/NotificationModal.tsx";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   allStudentsCodeActiveState,
@@ -9,17 +9,22 @@ import {
   codeState,
 } from "../../../shared/state/atom.ts";
 import ControlButtons from "../screens/ControlButtons.tsx";
+import Modal from "../../../shared/ui/Modal.tsx";
+import MainButton from "../../../shared/ui/MainButton.tsx";
+import CloseButton from "../../../shared/ui/CloseButton.tsx";
+import CloseLectureButton from "./CloseLectureButton.tsx";
 
 const MasterControlButton = () => {
   const [isControlOpen, setIsControlOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
+
   const [allStudentsCodeActive, setAllStudentsCodeActive] = useRecoilState(
     allStudentsCodeActiveState,
   );
   const [allStudentsDroneStop, setAllStudentsDroneActive] = useRecoilState(
     allStudentsDroneActiveState,
   );
-  const [isOpen, setIsOpen] = useRecoilState(codeModalState);
+  const [isCodeModalOpen, setIsCodeModalOpen] = useRecoilState(codeModalState);
   const recoilSavedCode = useRecoilValue(codeState);
   const sessionSavedCode = sessionStorage.getItem("code") || "";
   const savedCode = sessionSavedCode || recoilSavedCode;
@@ -47,19 +52,19 @@ const MasterControlButton = () => {
       <div className="relative space-x-4">
         <button
           className="py-3 px-6 font-semibold text-lg bg-stone-50 text-stone-500 rounded-xl shadow-lg disabledBtn"
-          onClick={() => setIsOpen(true)}
+          onClick={() => setIsCodeModalOpen(true)}
           disabled={!savedCode}
         >
           접속 코드
         </button>
         <button
-          className="py-3 px-6 font-semibold text-lg bg-stone-50 text-stone-500 rounded-xl shadow-lg disabledBtn"
+          className="relative py-3 px-6 font-semibold text-lg bg-stone-50 text-stone-500 rounded-xl shadow-lg disabledBtn"
           onClick={() => setIsControlOpen(!isControlOpen)}
           disabled={!savedCode}
         >
           전체제어
         </button>
-
+        <CloseLectureButton />
         <AnimatePresence mode="popLayout">
           {isControlOpen && (
             <motion.div
@@ -69,7 +74,12 @@ const MasterControlButton = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="z-30 top-14 right-0 rounded-lg absolute bg-stone-50 w-48 h-fit shadow-lg flex flex-col justify-center items-center space-y-4 p-4"
+              style={{
+                transform: "translate(-50%, -50%)",
+                top: "50%",
+                left: "50%",
+              }}
+              className="z-30 top-14 rounded-lg absolute bg-stone-50 w-48 h-fit shadow-lg flex flex-col justify-center items-center space-y-4 p-4"
             >
               <ControlButtons
                 codeActive={allStudentsCodeActive}

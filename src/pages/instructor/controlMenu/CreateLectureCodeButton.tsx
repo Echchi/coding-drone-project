@@ -1,15 +1,11 @@
-import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../../../shared/utils/cls.ts";
-import { useGenerateCodeApi } from "../../../features/lecture/hooks/useGenerateCodeApi.ts";
 import MainButton from "../../../shared/ui/MainButton.tsx";
-import { useCreateLecture } from "../../../features/lecture/hooks/useCreateLecture.ts";
+import { useCreateLectureCode } from "../../../features/lecture/hooks/useCreateLectureCode.ts";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { codeModalState, codeState } from "../../../shared/state/atom.ts";
-import { useInstructorLogin } from "../../../features/instructor/hooks/useInstructorLogin.ts";
+import { useEffect } from "react";
 
-const CreateLecture = () => {
+const CreateLectureCodeButton = () => {
   const {
     isCreateLectureLoading,
     isGenerateCodeLoading,
@@ -21,7 +17,7 @@ const CreateLecture = () => {
     handleClickCreateButton,
     handleCloseModal,
     code,
-  } = useCreateLecture();
+  } = useCreateLectureCode();
 
   return (
     <div>
@@ -151,4 +147,4 @@ const CreateLecture = () => {
   );
 };
 
-export default CreateLecture;
+export default CreateLectureCodeButton;

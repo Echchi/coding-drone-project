@@ -5,7 +5,7 @@ import { MESSAGES } from "../../../shared/constants/messages.ts";
 import { useGenerateCodeApi } from "./useGenerateCodeApi.ts";
 import { useCreateLectureApi } from "./useCreateLectureApi.ts";
 
-export const useCreateLecture = () => {
+export const useCreateLectureCode = () => {
   const { isLoading: isCreateLectureLoading, mutate } = useCreateLectureApi();
   const {
     data,
@@ -31,6 +31,9 @@ export const useCreateLecture = () => {
       setCode(data.code);
     }
   }, [data, savedCode]);
+  useEffect(() => {
+    if (!savedCode) refetch();
+  }, [savedCode]);
 
   const handleClickCreateButton = () => {
     const instructorId = sessionStorage.getItem("instructorId");
