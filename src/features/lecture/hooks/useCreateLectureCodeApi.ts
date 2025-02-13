@@ -5,7 +5,7 @@ import { MESSAGES } from "../../../shared/constants/messages.ts";
 import { useGenerateCodeApi } from "./useGenerateCodeApi.ts";
 import { useCreateLectureApi } from "./useCreateLectureApi.ts";
 
-export const useCreateLectureCode = () => {
+export const useCreateLectureCodeApi = () => {
   const { isLoading: isCreateLectureLoading, mutate } = useCreateLectureApi();
   const {
     data,

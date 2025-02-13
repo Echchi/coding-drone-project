@@ -11,4 +11,8 @@ export const lectureApi = {
     const response = await axiosInstance.post("/lecture", params);
     return response.data;
   },
+  deActiveLecture: async (lectureId: number) => {
+    const response = await axiosInstance.put("/lecture", lectureId);
+    return response.data;
+  },
 };

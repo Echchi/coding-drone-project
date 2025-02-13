@@ -3,12 +3,18 @@ import Modal from "../../../shared/ui/Modal.tsx";
 import CloseButton from "../../../shared/ui/CloseButton.tsx";
 import { useRecoilValue } from "recoil";
 import { codeState } from "../../../shared/state/atom.ts";
+import { useNavigate } from "react-router-dom";
+import { useDeactivateLectureApi } from "../../../features/lecture/hooks/useDeactivateLectureApi.ts";
 
 const CloseLectureButton = () => {
   const [isCloseLectureModalOpen, setIsCloseLectureModalOpen] = useState(false);
   const recoilSavedCode = useRecoilValue(codeState);
   const sessionSavedCode = sessionStorage.getItem("code") || "";
   const savedCode = sessionSavedCode || recoilSavedCode;
+  const { mutate } = useDeactivateLectureApi;
+  const handleClickCloseButton = () => {
+    sessionStorage.removeItem("code");
+  };
   return (
     <>
       <button
@@ -42,7 +48,7 @@ const CloseLectureButton = () => {
             <p>수업을 종료하시면 모든 학생들의 접속이 종료됩니다.</p>
             <p>수업을 종료하시겠습니까?</p>
             <CloseButton
-              onClick={undefined}
+              onClick={handleClickCloseButton}
               title={"종료하기"}
               className={"!w-1/3 !mt-10 !mb-1.5"}
             />

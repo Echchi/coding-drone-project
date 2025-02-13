@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../../../shared/utils/cls.ts";
 import MainButton from "../../../shared/ui/MainButton.tsx";
-import { useCreateLectureCode } from "../../../features/lecture/hooks/useCreateLectureCode.ts";
+import { useCreateLectureCodeApi } from "../../../features/lecture/hooks/useCreateLectureCodeApi.ts";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
 import { useEffect } from "react";
 
@@ -17,7 +17,7 @@ const CreateLectureCodeButton = () => {
     handleClickCreateButton,
     handleCloseModal,
     code,
-  } = useCreateLectureCode();
+  } = useCreateLectureCodeApi();
 
   return (
     <div>
