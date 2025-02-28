@@ -1,8 +1,10 @@
 import { ILectureParams } from "../../../shared/types/lecture.ts";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
 import { useCreateLectureMutation } from "./api/useCreateLectureMutation.ts";
+import { useNavigate } from "react-router-dom";
 
 export const useCreateLecture = () => {
+  const navigate = useNavigate();
   const { isLoading: isCreateLectureLoading, mutate } =
     useCreateLectureMutation();
 
@@ -13,7 +15,7 @@ export const useCreateLecture = () => {
   ) => {
     const instructorId = sessionStorage.getItem("instructorId");
     if (!instructorId) {
-      window.location.href = "/";
+      navigate("/", { replace: true });
       return;
     }
 

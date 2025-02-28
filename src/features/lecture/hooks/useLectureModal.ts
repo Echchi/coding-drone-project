@@ -5,9 +5,11 @@ import { useGenerateLectureCode } from "./api/useGenerateLectureCode.ts";
 import { useCreateLecture } from "./useCreateLecture.ts";
 import { useLecture } from "../../../shared/context/lectureProvider.tsx";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
+import { useNavigate } from "react-router-dom";
 
 export const useLectureModal = () => {
-  const { data, refetch } = useGenerateLectureCode();
+  const navigate = useNavigate();
+  const { data, refetch, isGenerateCodeLoading } = useGenerateLectureCode();
   const { hasSavedLecture, setSavedLecture } = useLecture();
   const { isCreateLectureLoading, createLecture } = useCreateLecture();
   const [isCodeModalOpen, setIsCodeModalOpen] = useRecoilState(codeModalState);
@@ -27,14 +29,14 @@ export const useLectureModal = () => {
   const handleClickCreateButton = () => {
     const instructorId = sessionStorage.getItem("instructorId");
     if (!instructorId) {
-      window.location.href = "/";
+      navigate("/", { replace: true });
       return;
     }
 
     createLecture(
       code,
       (data) => {
-        sessionStorage.setItem("code", data.code);
+        sessionStorage.setItem("code", data.code || "");
         sessionStorage.setItem("lectureId", String(data.lectureId));
 
         setSavedLecture({
@@ -60,5 +62,6 @@ export const useLectureModal = () => {
     isCreateLectureLoading,
     isCodeModalOpen,
     setIsCodeModalOpen,
+    isGenerateCodeLoading,
   };
 };

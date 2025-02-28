@@ -16,8 +16,10 @@ const CreateLectureCodeButton = () => {
     setIsCodeModalOpen,
     code,
     isCreateLectureLoading,
+    isGenerateCodeLoading,
+    refetch,
   } = useLectureModal();
-  const { loading: isGenerateCodeLoading, refetch } = useGenerateLectureCode();
+
   const { hasSavedLecture, savedLecture } = useLecture();
   return (
     <>
