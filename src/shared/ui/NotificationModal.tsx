@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../utils/cls.ts";
+import { NOTIFICATION_MODAL_CLOSE_TIME } from "../constants/timing.ts";
 
 interface IModal {
   content: string;
-
   className?: string;
 }
 const NotificationModal = ({ content, className }: IModal) => {
@@ -20,7 +20,7 @@ const NotificationModal = ({ content, className }: IModal) => {
     if (isOpen) {
       const timeout = setTimeout(() => {
         setIsOpen(false);
-      }, 3000);
+      }, NOTIFICATION_MODAL_CLOSE_TIME * 10000);
       return () => clearTimeout(timeout);
     }
   }, [isOpen]);
@@ -38,8 +38,8 @@ const NotificationModal = ({ content, className }: IModal) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
             className={cls(
-              "fixed z-30 bg-white shadow-2xl py-12 rounded-lg flex items-center justify-center px-10",
-              className ? className : "font-bold text-xl",
+              "fixed z-30 bg-white shadow-2xl py-12 rounded-lg flex items-center justify-center px-10 font-bold text-xl",
+              className ? className : "",
             )}
             style={{
               transform: "translate(-50%, -50%)",
