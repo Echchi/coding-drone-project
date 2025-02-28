@@ -7,19 +7,16 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   codeModalState,
   codeState,
+  lectureState,
   selectedScreenState,
 } from "../../shared/state/atom.ts";
 import WorkspaceContent from "../student/workspaceContent.tsx";
-import CreateLecture from "./screens/CreateLecture.tsx";
+import CreateLectureCodeButton from "./controlMenu/CreateLectureCodeButton.tsx";
 
 const InstructorControlPanel = () => {
   const [division, setDivision] = useState("4x3");
   const [selectedStudent, setSelectedStudent] =
     useRecoilState(selectedScreenState);
-  const recoilSavedCode = useRecoilValue(codeState);
-
-  const sessionSavedCode = sessionStorage.getItem("code") || "";
-  const savedCode = sessionSavedCode || recoilSavedCode;
 
   return (
     <>
@@ -44,7 +41,6 @@ const InstructorControlPanel = () => {
         <ControlMenu setDivision={setDivision} />
         <div className="flex grow mt-3">
           <ScreenGrid division={division} />
-          <CreateLecture />
         </div>
       </div>
     </>

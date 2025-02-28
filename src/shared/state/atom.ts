@@ -16,10 +16,6 @@ export const selectedScreenState = atom({
   },
 });
 
-export const codeState = atom({
-  key: "codeState",
-  default: "",
-});
 export const codeModalState = atom({
   key: "codeModalState",
   default: false,

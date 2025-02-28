@@ -96,12 +96,10 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (
-      originalRequest.url === "/login" &&
-      error.response?.status === 401 &&
-      !originalRequest._retry
+      originalRequest.url !== "/login" ||
+      (error.response?.status === 401 && !originalRequest._retry)
     ) {
       originalRequest._retry = true;
-
       try {
         const newToken = await tokenManager.refreshAccessToken();
         originalRequest.headers.Authorization = `Bearer ${newToken}`;

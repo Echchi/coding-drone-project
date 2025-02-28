@@ -1,4 +1,6 @@
-export interface ICreateLectureParams {
-  instructorId: string;
-  code: string;
+export interface ILectureParams {
+  instructorId?: string;
+  lectureId?: number;
+  active?: boolean;
+  code?: string;
 }
