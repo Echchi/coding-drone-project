@@ -1,31 +1,41 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../../../shared/utils/cls.ts";
 import MainButton from "../../../shared/ui/MainButton.tsx";
-import { useCreateLectureCodeApi } from "../../../features/lecture/hooks/useCreateLectureCodeApi.ts";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
-import { useEffect } from "react";
+import { useLectureModal } from "../../../features/lecture/hooks/useLectureModal.ts";
+import { useGenerateLectureCode } from "../../../features/lecture/hooks/api/useGenerateLectureCode.ts";
+import { useLecture } from "../../../shared/context/lectureProvider.tsx";
 
 const CreateLectureCodeButton = () => {
   const {
-    isCreateLectureLoading,
-    isGenerateCodeLoading,
-    refetch,
-    isOpen,
     error,
-    savedCode,
     setIsOpen,
     handleClickCreateButton,
     handleCloseModal,
+    isCodeModalOpen,
+    setIsCodeModalOpen,
     code,
-  } = useCreateLectureCodeApi();
-
+    isCreateLectureLoading,
+  } = useLectureModal();
+  const { loading: isGenerateCodeLoading, refetch } = useGenerateLectureCode();
+  const { hasSavedLecture, savedLecture } = useLecture();
   return (
-    <div>
+    <>
+      <button
+        className={cls(
+          "py-3 px-6 font-semibold text-lg rounded-xl shadow-lg disabledBtn bg-amber-500 text-white",
+          hasSavedLecture ? "" : "animate-bounce hover:animate-none",
+        )}
+        onClick={() => setIsCodeModalOpen(true)}
+      >
+        {hasSavedLecture ? "접속 코드" : "수업 시작"}
+      </button>
+
       <AnimatePresence mode="popLayout">
-        {isOpen && (
+        {isCodeModalOpen && (
           <>
             <div
-              className="absolute inset-0 w-full h-full bg-black/80 rounded-lg flex flex-col justify-center items-center text-white font-bold text-xl z-20"
+              className="!ml-0 fixed inset-0 w-full h-full bg-black/80 rounded-lg flex flex-col justify-center items-center text-white font-bold text-xl z-20"
               onClick={handleCloseModal}
             />
             <motion.div
@@ -36,7 +46,7 @@ const CreateLectureCodeButton = () => {
               transition={{ duration: 0.3 }}
               className={cls(
                 "fixed z-30 bg-white shadow py-5 rounded-lg flex items-center justify-center font-bold text-xl min-h-96",
-                savedCode ? "w-[80vh]" : "w-[60vh]",
+                hasSavedLecture ? "w-[80vh]" : "w-[60vh]",
               )}
               style={{
                 transform: "translate(-50%, -50%)",
@@ -44,7 +54,7 @@ const CreateLectureCodeButton = () => {
                 left: "50%",
               }}
             >
-              {savedCode ? (
+              {hasSavedLecture ? (
                 <>
                   <button onClick={() => setIsOpen(false)}>
                     <svg
@@ -66,19 +76,19 @@ const CreateLectureCodeButton = () => {
                     <p
                       className={cls(
                         "text-stone-700 flex justify-center",
-                        savedCode ? "text-4xl" : "text-2xl ",
+                        hasSavedLecture ? "text-4xl" : "text-2xl ",
                       )}
                     >
                       <span>수업 접속 코드</span>
                     </p>
 
                     <div className="w-full flex space-x-5">
-                      {savedCode.split("").map((number, index) => (
+                      {savedLecture.code.split("").map((number, index) => (
                         <div
                           key={`code_${index}`}
                           className={cls(
                             "flex justify-center items-center rounded-lg ring-4 ring-lime-500",
-                            savedCode
+                            hasSavedLecture
                               ? "py-10 w-20 text-6xl"
                               : " py-6 w-14 text-2xl",
                           )}
@@ -91,7 +101,7 @@ const CreateLectureCodeButton = () => {
                 </>
               ) : (
                 <div className="text-center my-10 space-y-7">
-                  <p className="text-2xl text-stone-700">수업 만들기</p>
+                  <p className="text-3xl text-stone-700">접속 코드 만들기</p>
 
                   <div className="w-full flex space-x-5">
                     {code.split("").map((number, index) => (
@@ -143,7 +153,7 @@ const CreateLectureCodeButton = () => {
           </>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
 

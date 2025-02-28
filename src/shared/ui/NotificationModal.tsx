@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cls } from "../utils/cls.ts";
 
@@ -27,23 +27,29 @@ const NotificationModal = ({ content, className }: IModal) => {
   return (
     <AnimatePresence mode="popLayout">
       {isOpen && (
-        <motion.div
-          key={`notice_${content}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className={cls(
-            "fixed z-30 bg-white shadow-2xl py-5 rounded-lg flex items-center justify-center w-96",
-            className ? className : "font-bold text-xl",
-          )}
-          style={{
-            transform: "translate(-50%, -50%)",
-            top: "50%",
-            left: "50%",
-          }}
-        >
-          <div>{content}</div>
-        </motion.div>
+        <>
+          <div
+            className="fixed !ml-0 inset-0 w-full h-full bg-black/50 rounded-lg flex flex-col justify-center items-center text-white font-bold text-xl z-20"
+            onClick={() => setIsOpen(false)}
+          />
+          <motion.div
+            key={`notice_${content}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className={cls(
+              "fixed z-30 bg-white shadow-2xl py-12 rounded-lg flex items-center justify-center px-10",
+              className ? className : "font-bold text-xl",
+            )}
+            style={{
+              transform: "translate(-50%, -50%)",
+              top: "50%",
+              left: "50%",
+            }}
+          >
+            <div>{content}</div>
+          </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

@@ -93,7 +93,6 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    console.log("들어오나요?");
     const originalRequest = error.config;
 
     if (
@@ -101,7 +100,6 @@ axiosInstance.interceptors.response.use(
       (error.response?.status === 401 && !originalRequest._retry)
     ) {
       originalRequest._retry = true;
-      console.log("들어오나요?");
       try {
         const newToken = await tokenManager.refreshAccessToken();
         originalRequest.headers.Authorization = `Bearer ${newToken}`;

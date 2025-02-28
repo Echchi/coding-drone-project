@@ -21,7 +21,7 @@ const Modal = ({
       {isOpen && (
         <>
           <div
-            className="fixed inset-0 w-full h-full bg-black/80 z-20"
+            className="fixed inset-0 w-full h-full bg-black/80 z-20 !ml-0"
             onClick={onClose}
           />
           <motion.div

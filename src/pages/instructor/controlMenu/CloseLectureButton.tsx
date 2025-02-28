@@ -1,26 +1,28 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Modal from "../../../shared/ui/Modal.tsx";
 import CloseButton from "../../../shared/ui/CloseButton.tsx";
-import { useRecoilValue } from "recoil";
-import { codeState } from "../../../shared/state/atom.ts";
-import { useNavigate } from "react-router-dom";
-import { useDeactivateLectureApi } from "../../../features/lecture/hooks/useDeactivateLectureApi.ts";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useDeactivateLecture } from "../../../features/lecture/hooks/api/useDeactivateLecture.ts";
+import { useLecture } from "../../../shared/context/lectureProvider.tsx";
 
 const CloseLectureButton = () => {
   const [isCloseLectureModalOpen, setIsCloseLectureModalOpen] = useState(false);
-  const recoilSavedCode = useRecoilValue(codeState);
-  const sessionSavedCode = sessionStorage.getItem("code") || "";
-  const savedCode = sessionSavedCode || recoilSavedCode;
-  const { mutate } = useDeactivateLectureApi;
+  const { resetSavedLecture, hasSavedLecture, savedLecture } = useLecture();
+  const { mutate, data } = useDeactivateLecture();
   const handleClickCloseButton = () => {
-    sessionStorage.removeItem("code");
+    setIsCloseLectureModalOpen(false);
+    console.log("엥엥");
+    mutate({ lectureId: savedLecture.lectureId, active: false });
+    console.log("data", data);
+    resetSavedLecture();
+    /* 학생들과 통신 종료 */
   };
   return (
     <>
       <button
-        className="py-3 px-6 font-semibold text-lg bg-stone-50 text-stone-500 rounded-xl shadow-lg disabledBtn"
+        className="py-3 px-6 font-semibold text-lg bg-rose-500 text-white rounded-xl shadow-lg disabledBtn"
         onClick={() => setIsCloseLectureModalOpen(true)}
-        disabled={!savedCode}
+        disabled={!hasSavedLecture}
       >
         수업 종료
       </button>

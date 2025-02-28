@@ -1,7 +1,7 @@
-import { lectureApi } from "../api.ts";
 import { useQuery } from "@tanstack/react-query";
+import { lectureApi } from "../../api.ts";
 
-export const useGenerateCodeApi = () => {
+export const useGenerateLectureCode = () => {
   return useQuery({
     queryKey: ["generateCode"],
     queryFn: () => lectureApi.generateCode(),
