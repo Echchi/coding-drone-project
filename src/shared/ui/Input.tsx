@@ -53,9 +53,9 @@ const Input = ({
           onChange={onChange && ((event) => onChange(event))}
         />
       </div>
-      {/*{errorMessage && errorMessage.length > 0 && (*/}
-      {/*  <span className="error">{errorMessage}</span>*/}
-      {/*)}*/}
+      {errorMessage && errorMessage.length > 0 && (
+        <p className="error">{errorMessage}</p>
+      )}
     </>
   );
 };

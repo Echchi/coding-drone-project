@@ -15,4 +15,8 @@ export const lectureApi = {
     const response = await axiosInstance.put("/lecture", { lectureId, active });
     return response.data;
   },
+  getLectureByCode: async (code: string) => {
+    const response = await axiosInstance.get("/lecture", { params: { code } });
+    return response.data;
+  },
 };
