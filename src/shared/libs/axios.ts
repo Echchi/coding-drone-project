@@ -54,9 +54,7 @@ class TokenManager {
         resolve(newAccessToken);
       } catch (error) {
         this.removeAccessToken();
-        sessionStorage.removeItem("refresh_token");
-        sessionStorage.removeItem("code");
-        sessionStorage.removeItem("instructorId");
+        sessionStorage.clear();
         window.location.href = "/";
         reject(error);
       } finally {
@@ -77,7 +75,7 @@ const tokenManager = TokenManager.getInstance();
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    if (config.url === "/login") {
+    if (["/login", "/lecture_connect"].includes(config.url || "")) {
       return config;
     }
     const token = tokenManager.getAccessToken();
@@ -96,8 +94,9 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (
-      originalRequest.url !== "/login" ||
-      (error.response?.status === 401 && !originalRequest._retry)
+      !["/login", "/lecture_connect"].includes(originalRequest.url || "") &&
+      error.response?.status === 401 &&
+      !originalRequest._retry
     ) {
       originalRequest._retry = true;
       try {
