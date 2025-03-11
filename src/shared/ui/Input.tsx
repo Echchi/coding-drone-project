@@ -14,6 +14,7 @@ interface IInputProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   isLoading?: boolean;
+  showErrorMessage?: boolean;
 }
 const Input = ({
   type,
@@ -26,6 +27,7 @@ const Input = ({
   onChange,
   onBlur,
   isLoading,
+  showErrorMessage = true,
 }: IInputProps) => {
   return (
     <>
@@ -33,9 +35,7 @@ const Input = ({
         <span
           className={cls(
             "absolute inset-y-0 left-6 flex items-center group-focus-within:z-20 *:size-6 text-lime-600",
-            errorMessage?.length > 0
-              ? "*:text-orange-500"
-              : "group-focus-within:*:text-lime-600 ",
+            errorMessage?.length > 0 ? "*:text-orange-500" : "group-focus-within:*:text-lime-600 "
           )}
         >
           {icon}
@@ -47,15 +47,13 @@ const Input = ({
             "rounded-full w-full pl-20 outline-none p-3 group-focus-within:z-10 group-focus-within:outline-none ring group-focus-within:ring-offset-0 group-focus-within:ring-[2px] transition-all bg-white placeholder:text-lg font-semibold",
             errorMessage?.length > 0
               ? "group-focus-within:ring-orange-500 ring-[2px] ring-orange-500"
-              : "group-focus-within:ring-lime-500 ring-0",
+              : "group-focus-within:ring-lime-500 ring-0"
           )}
           placeholder={placeholder}
           onChange={onChange && ((event) => onChange(event))}
         />
       </div>
-      {errorMessage && errorMessage.length > 0 && (
-        <p className="error">{errorMessage}</p>
-      )}
+      {showErrorMessage && errorMessage && errorMessage.length > 0 && <p className="error">{errorMessage}</p>}
     </>
   );
 };
