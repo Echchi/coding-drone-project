@@ -6,8 +6,7 @@ import MainButton from "../../../shared/ui/MainButton.tsx";
 import { useInstructorLogin } from "../../../features/instructor/hooks/useInstructorLogin.ts";
 
 const InstructorLogin = () => {
-  const { loginParams, error, handleOnChangeLonginInfo, handleLoginOnClick } =
-    useInstructorLogin();
+  const { loginParams, error, handleOnChangeLonginInfo, handleLoginOnClick } = useInstructorLogin();
 
   return (
     <>
@@ -18,22 +17,20 @@ const InstructorLogin = () => {
             maxLength={10}
             icon={<FontAwesomeIcon icon={faUser} />}
             placeholder="아이디"
-            onChange={(event) =>
-              handleOnChangeLonginInfo(event.target.value, "userid")
-            }
+            onChange={(event) => handleOnChangeLonginInfo(event.target.value, "userid")}
             value={loginParams.userid}
             errorMessage={error}
+            showErrorMessage={false}
           />
           <Input
             type={"password"}
             maxLength={10}
             icon={<FontAwesomeIcon icon={faLock} />}
             placeholder="비밀번호"
-            onChange={(event) =>
-              handleOnChangeLonginInfo(event.target.value, "password")
-            }
+            onChange={(event) => handleOnChangeLonginInfo(event.target.value, "password")}
             value={loginParams.password}
             errorMessage={error}
+            showErrorMessage={false}
           />
         </div>
 
@@ -41,10 +38,7 @@ const InstructorLogin = () => {
           title={"로그인"}
           onClick={handleLoginOnClick}
           className={"!mt-6"}
-          disabled={
-            loginParams.userid.trim().length === 0 ||
-            loginParams.password.trim().length === 0
-          }
+          disabled={loginParams.userid.trim().length === 0 || loginParams.password.trim().length === 0}
         />
         {error && <p className="errorText">{error}</p>}
       </div>

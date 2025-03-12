@@ -1,17 +1,16 @@
-import { ILectureParams } from "../../../shared/types/lecture.ts";
+import { ILectureParams, ILectureResponse } from "../../../shared/types/lecture.ts";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
 import { useCreateLectureMutation } from "./api/useCreateLectureMutation.ts";
 import { useNavigate } from "react-router-dom";
 
 export const useCreateLecture = () => {
   const navigate = useNavigate();
-  const { isLoading: isCreateLectureLoading, mutate } =
-    useCreateLectureMutation();
+  const { isPending: isCreateLectureLoading, mutate } = useCreateLectureMutation();
 
   const createLecture = (
     code: string,
-    onSuccess: (data: ILectureParams) => void,
-    onError: (error: string) => void,
+    onSuccess: (data: ILectureResponse) => void,
+    onError: (error: string) => void
   ) => {
     const instructorId = sessionStorage.getItem("instructorId");
     if (!instructorId) {
@@ -24,7 +23,7 @@ export const useCreateLecture = () => {
       {
         onSuccess,
         onError: () => onError(MESSAGES.AUTH_ERROR.INVALID_CREDENTIALS),
-      },
+      }
     );
   };
 

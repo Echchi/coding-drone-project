@@ -6,6 +6,7 @@ interface IControlButtonsProps {
   droneActive: boolean;
   handleDroneOnClick: () => void;
   isSmall?: boolean;
+  disabled?: boolean;
 }
 const ControlButtons = ({
   codeActive,
@@ -13,6 +14,7 @@ const ControlButtons = ({
   droneActive,
   handleDroneOnClick,
   isSmall,
+  disabled,
 }: IControlButtonsProps) => {
   return (
     <>
@@ -20,7 +22,7 @@ const ControlButtons = ({
         className={cls(
           "w-full font-semibold rounded-xl shadow-lg transition-colors",
           codeActive ? "bg-blue-500 text-white" : "bg-blue-200 text-blue-600",
-          isSmall ? "py-1 text-xs" : "py-3 text-lg",
+          isSmall ? "py-1 text-xs" : "py-3 text-lg"
         )}
         onClick={(event) => {
           event.stopPropagation();
@@ -32,10 +34,8 @@ const ControlButtons = ({
       <button
         className={cls(
           "w-full font-semibold rounded-xl shadow-lg transition-colors",
-          droneActive
-            ? "bg-green-500 text-white"
-            : "bg-green-200 text-green-600",
-          isSmall ? "py-1 text-xs" : "py-3 text-lg",
+          droneActive ? "bg-green-500 text-white" : "bg-green-200 text-green-600",
+          isSmall ? "py-1 text-xs" : "py-3 text-lg"
         )}
         onClick={(event) => {
           event.stopPropagation();

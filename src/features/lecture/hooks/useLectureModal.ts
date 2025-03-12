@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 export const useLectureModal = () => {
   const navigate = useNavigate();
-  const { data, refetch, isGenerateCodeLoading } = useGenerateLectureCode();
+  const { data, refetch, isLoading: isGenerateCodeLoading } = useGenerateLectureCode();
   const { hasSavedLecture, setSavedLecture } = useLecture();
   const { isCreateLectureLoading, createLecture } = useCreateLecture();
   const [isCodeModalOpen, setIsCodeModalOpen] = useRecoilState(codeModalState);
@@ -36,19 +36,21 @@ export const useLectureModal = () => {
     createLecture(
       code,
       (data) => {
-        sessionStorage.setItem("code", data.code || "");
-        sessionStorage.setItem("lectureId", String(data.lectureId));
+        sessionStorage.setItem("code", data.code);
+        sessionStorage.setItem("lectureId", String(data.id));
 
         setSavedLecture({
-          lectureId: data.lectureId,
+          lectureId: Number(data.id),
           code: data.code,
+          instructorId: instructorId,
         });
 
         setError("");
+        setIsCodeModalOpen(false);
       },
       () => {
         setError(MESSAGES.AUTH_ERROR.INVALID_CREDENTIALS);
-      },
+      }
     );
   };
 
@@ -63,5 +65,6 @@ export const useLectureModal = () => {
     isCodeModalOpen,
     setIsCodeModalOpen,
     isGenerateCodeLoading,
+    refetch,
   };
 };
