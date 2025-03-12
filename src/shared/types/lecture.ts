@@ -1,6 +1,16 @@
 export interface ILectureParams {
   instructorId?: string;
+  code: string;
   lectureId?: number;
   active?: boolean;
-  code?: string;
+}
+
+export interface ILectureResponse {
+  id: number;
+  code: string;
+  active: boolean;
+  instructorId: number;
+  instructorRoom: string;
+  created_at: string;
+  updated_at: string;
 }

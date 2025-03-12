@@ -1,116 +1,66 @@
-import React, { SetStateAction, useEffect, useState } from "react";
+import React from "react";
 import { cls } from "../../../shared/utils/cls.ts";
 import ControlButtons from "./ControlButtons.tsx";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  allStudentsCodeActiveState,
-  allStudentsDroneActiveState,
-  selectedScreenState,
-} from "../../../shared/state/atom.ts";
+import { useStudentScreen } from "../../../features/instructor/hooks/useStudentScreen";
+import { useInstructorSocket } from "../../../features/instructor/hooks/useInstructorSocket";
 
 interface IScreenProps {
-  index: number;
+  student: IStudent;
 }
 
-const Screen = ({ index }: IScreenProps) => {
-  const allStudentsCodeActive = useRecoilValue(allStudentsCodeActiveState);
-  const allStudentsDroneActive = useRecoilValue(allStudentsDroneActiveState);
-  const [codeActive, setCodeActive] = useState(true);
-  const [droneActive, setDroneActive] = useState(true);
-  const setSelectedStudent = useSetRecoilState(selectedScreenState);
+export const Screen = ({ student }: IScreenProps) => {
+  const { codeActive, droneActive, handleScreenClick, toggleCodeActive, toggleDroneActive } = useStudentScreen(index);
 
-  useEffect(() => {
-    setCodeActive(allStudentsCodeActive);
-  }, [allStudentsCodeActive]);
-  useEffect(() => {
-    setDroneActive(allStudentsDroneActive);
-  }, [allStudentsDroneActive]);
-  const handleClickScreen = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-    setSelectedStudent((prev) => ({
-      ...prev,
-      id: index + 1,
-      name: `학생 ${index + 1}`,
-    }));
-  };
   return (
-    <>
-      <div
-        key={`screen_${index}`}
-        className={cls(
-          "w-full h-full rounded-lg shadow-lg flex flex-col transition-all cursor-pointer hover:scale-[103%] hover:shadow-xl",
-          !codeActive && !droneActive ? "ring ring-cyan-500" : "",
-          codeActive
-            ? ""
-            : !droneActive
-              ? "ring ring-cyan-500"
-              : "ring ring-blue-500",
-          droneActive
-            ? ""
-            : !codeActive
-              ? "ring ring-cyan-500"
-              : "ring ring-green-500",
-        )}
-        onClick={(event) => handleClickScreen(event)}
-      >
-        <div className="w-full h-9 rounded-t-lg flex justify-between items-center px-3 bg-gray-100">
-          <span className="font-semibold">학생 {index + 1}</span>
-          <p className="flex items-center space-x-3">
-            <span>
-              {index !== 9
-                ? `${Math.min(Math.round((Math.random() + 0.1) * 100), 100)} %`
-                : "-"}
-            </span>
-            {index !== 9 && (
+    <div
+      key={`screen_${student.studentId}`}
+      className={cls(
+        "w-full h-full rounded-lg shadow-lg flex flex-col transition-all cursor-pointer hover:scale-[103%] hover:shadow-xl",
+        !codeActive && !droneActive ? "ring ring-cyan-500" : "",
+        codeActive ? "" : !droneActive ? "ring ring-cyan-500" : "ring ring-blue-500",
+        droneActive ? "" : !codeActive ? "ring ring-cyan-500" : "ring ring-green-500",
+        !student?.isConnected ? "opacity-50" : ""
+      )}
+      onClick={handleScreenClick}
+    >
+      <div className="w-full h-9 rounded-t-lg flex justify-between items-center px-3 bg-gray-100">
+        <span className="font-semibold">{student?.name || `학생 ${index + 1}`}</span>
+        <p className="flex items-center space-x-3">
+          {student?.isConnected ? (
+            <>
+              <span>{student?.droneStatus || "대기 중"}</span>
               <span
                 className={cls(
                   "inline-block w-4 aspect-square rounded-full shadow",
-                  index === 5 || index === 10 ? "bg-rose-500" : "bg-green-500",
+                  student?.droneStatus === "error" ? "bg-rose-500" : "bg-green-500"
                 )}
               />
-            )}
-          </p>
-        </div>
-        <div className="grow bg-white relative rounded-b-lg text-xs font-JetBrains p-2">
-          console.log("hello");
-          {index === 3 && (
-            <div className="absolute inset-0 w-full h-full bg-amber-200/70 rounded-b-lg flex flex-col justify-center items-center text-amber-600 font-bold text-xl animate-pulse">
-              <p className="flex items-center">
-                <picture>
-                  <source
-                    srcSet="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b/512.webp"
-                    type="image/webp"
-                  />
-                  <img
-                    src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f44b/512.gif"
-                    alt="👋"
-                    className="size-6 mr-2"
-                  />
-                </picture>
-                질문있어요
-              </p>
-            </div>
+            </>
+          ) : (
+            <span>연결 안됨</span>
           )}
-          {index === 9 && (
-            <div className="absolute inset-0 w-full h-full bg-stone-500 rounded-b-lg flex flex-col justify-center items-center text-white font-bold text-xl">
-              <p>연결되지않음</p>
-            </div>
-          )}
-          <div className="z-10 bottom-2 right-2 absolute w-full h-9 rounded-t-lg flex justify-end items-center">
-            <div className="flex space-x-2 w-2/5">
-              <ControlButtons
-                codeActive={codeActive}
-                handleCodeOnClick={() => setCodeActive(!codeActive)}
-                droneActive={droneActive}
-                handleDroneOnClick={() => setDroneActive(!droneActive)}
-                isSmall={true}
-              />
-            </div>
+        </p>
+      </div>
+      <div className="grow bg-white relative rounded-b-lg text-xs font-JetBrains p-2">
+        {student?.code || "console.log('hello');"}
+        {!student?.isConnected && (
+          <div className="absolute inset-0 w-full h-full bg-stone-500 rounded-b-lg flex flex-col justify-center items-center text-white font-bold text-xl">
+            <p>연결되지않음</p>
+          </div>
+        )}
+        <div className="z-10 bottom-2 right-2 absolute w-full h-9 rounded-t-lg flex justify-end items-center">
+          <div className="flex space-x-2 w-2/5">
+            <ControlButtons
+              codeActive={codeActive}
+              handleCodeOnClick={toggleCodeActive}
+              droneActive={droneActive}
+              handleDroneOnClick={toggleDroneActive}
+              isSmall={true}
+              disabled={!student?.isConnected}
+            />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
-
-export default Screen;

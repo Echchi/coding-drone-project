@@ -9,17 +9,23 @@ interface ILectureContext {
 }
 
 const LectureContext = createContext<ILectureContext | null>(null);
-export const LectureProvider = ({ children }) => {
-  const sessionSavedCode = sessionStorage.getItem("code") || "";
-  const sessionSavedLectureId = sessionStorage.getItem("lectureId") || "";
+export const LectureProvider = ({ children }: { children: React.ReactNode }) => {
+  const sessionSavedCode = sessionStorage.getItem("code");
+  const sessionSavedLectureId = sessionStorage.getItem("lectureId");
   const [savedLecture, setSavedLecture] = useState<ILectureParams>({
-    lectureId: Number(sessionSavedLectureId) || -1,
-    code: sessionSavedCode,
+    lectureId: sessionSavedLectureId ? Number(sessionSavedLectureId) : -1,
+    code: sessionSavedCode || "",
+    instructorId: sessionStorage.getItem("instructorId") || "",
   });
 
   useEffect(() => {
-    sessionStorage.setItem("lectureId", String(savedLecture.lectureId));
-    sessionStorage.setItem("code", savedLecture.code || "");
+    if (savedLecture.lectureId && savedLecture.lectureId > 0) {
+      sessionStorage.setItem("lectureId", String(savedLecture.lectureId));
+      sessionStorage.setItem("code", savedLecture.code);
+    } else {
+      sessionStorage.removeItem("lectureId");
+      sessionStorage.removeItem("code");
+    }
   }, [savedLecture]);
 
   const resetSavedLecture = () => {
@@ -29,15 +35,14 @@ export const LectureProvider = ({ children }) => {
     });
   };
 
-  const hasSavedLecture =
-    savedLecture.lectureId > 0 && savedLecture.code !== "";
+  const hasSavedLecture = savedLecture.lectureId && savedLecture.lectureId > 0 && savedLecture.code !== "";
   return (
     <LectureContext.Provider
       value={{
         savedLecture,
         resetSavedLecture,
         setSavedLecture,
-        hasSavedLecture,
+        hasSavedLecture: Boolean(savedLecture.lectureId && savedLecture.lectureId > 0 && savedLecture.code !== ""),
       }}
     >
       {children}

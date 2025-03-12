@@ -7,11 +7,14 @@ import AllControlButtons from "./AllControlButtons.tsx";
 import CloseLectureButton from "./CloseLectureButton.tsx";
 import LogoutButton from "./LogoutButton.tsx";
 import { useLecture } from "../../../shared/context/lectureProvider.tsx";
+import { useInstructorSocket } from "../../../features/instructor/hooks/useInstructorSocket.ts";
+
 interface IMenu {
   setDivision: React.Dispatch<SetStateAction<string>>;
 }
 const ControlMenu = ({ setDivision }: IMenu) => {
   const { hasSavedLecture } = useLecture();
+  useInstructorSocket();
 
   return (
     <div className="h-16 px-4 w-full flex items-center justify-between">
@@ -45,7 +48,7 @@ const ControlMenu = ({ setDivision }: IMenu) => {
           <span
             className={cls(
               "w-3 aspect-square inline-block mr-2 rounded-full",
-              hasSavedLecture ? "bg-red-500 " : "bg-stone-500",
+              hasSavedLecture ? "bg-red-500 " : "bg-stone-500"
             )}
           />
           이상있음

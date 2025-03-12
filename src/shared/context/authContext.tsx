@@ -11,20 +11,30 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [role, setRole] = useState<"instructor" | "student" | null>(null);
+  const [role, setRole] = useState<"instructor" | "student" | null>(() => {
+    const instructorId = sessionStorage.getItem("instructorId");
+    const studentId = sessionStorage.getItem("id");
+
+    if (instructorId) {
+      return "instructor";
+    } else if (studentId) {
+      return "student";
+    }
+    return null;
+  });
 
   useEffect(() => {
     const instructorId = sessionStorage.getItem("instructorId");
     const studentId = sessionStorage.getItem("id");
 
-    if (instructorId) {
+    if (instructorId && role !== "instructor") {
       setRole("instructor");
-    } else if (studentId) {
+    } else if (studentId && role !== "student") {
       setRole("student");
-    } else {
+    } else if (!instructorId && !studentId && role !== null) {
       setRole(null);
     }
-  }, []);
+  }, [role]);
 
   return <AuthContext.Provider value={{ role, setRole }}>{children}</AuthContext.Provider>;
 };

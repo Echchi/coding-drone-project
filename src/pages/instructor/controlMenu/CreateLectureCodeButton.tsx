@@ -9,7 +9,6 @@ import { useLecture } from "../../../shared/context/lectureProvider.tsx";
 const CreateLectureCodeButton = () => {
   const {
     error,
-    setIsOpen,
     handleClickCreateButton,
     handleCloseModal,
     isCodeModalOpen,
@@ -26,7 +25,7 @@ const CreateLectureCodeButton = () => {
       <button
         className={cls(
           "py-3 px-6 font-semibold text-lg rounded-xl shadow-lg disabledBtn bg-amber-500 text-white",
-          hasSavedLecture ? "" : "animate-bounce hover:animate-none",
+          hasSavedLecture ? "" : "animate-bounce hover:animate-none"
         )}
         onClick={() => setIsCodeModalOpen(true)}
       >
@@ -48,7 +47,7 @@ const CreateLectureCodeButton = () => {
               transition={{ duration: 0.3 }}
               className={cls(
                 "fixed z-30 bg-white shadow py-5 rounded-lg flex items-center justify-center font-bold text-xl min-h-96",
-                hasSavedLecture ? "w-[80vh]" : "w-[60vh]",
+                hasSavedLecture ? "w-[80vh]" : "w-[60vh]"
               )}
               style={{
                 transform: "translate(-50%, -50%)",
@@ -58,7 +57,7 @@ const CreateLectureCodeButton = () => {
             >
               {hasSavedLecture ? (
                 <>
-                  <button onClick={() => setIsOpen(false)}>
+                  <button onClick={() => setIsCodeModalOpen(false)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -76,23 +75,18 @@ const CreateLectureCodeButton = () => {
                   </button>
                   <div className="text-center my-10 space-y-7">
                     <p
-                      className={cls(
-                        "text-stone-700 flex justify-center",
-                        hasSavedLecture ? "text-4xl" : "text-2xl ",
-                      )}
+                      className={cls("text-stone-700 flex justify-center", hasSavedLecture ? "text-4xl" : "text-2xl ")}
                     >
                       <span>수업 접속 코드</span>
                     </p>
 
                     <div className="w-full flex space-x-5">
-                      {savedLecture.code.split("").map((number, index) => (
+                      {savedLecture.code?.split("").map((number, index) => (
                         <div
                           key={`code_${index}`}
                           className={cls(
                             "flex justify-center items-center rounded-lg ring-4 ring-lime-500",
-                            hasSavedLecture
-                              ? "py-10 w-20 text-6xl"
-                              : " py-6 w-14 text-2xl",
+                            hasSavedLecture ? "py-10 w-20 text-6xl" : " py-6 w-14 text-2xl"
                           )}
                         >
                           {number}
@@ -139,16 +133,9 @@ const CreateLectureCodeButton = () => {
                   <MainButton
                     onClick={() => handleClickCreateButton()}
                     title={"수업 시작"}
-                    disabled={
-                      isCreateLectureLoading ||
-                      isGenerateCodeLoading ||
-                      error ||
-                      !code
-                    }
+                    disabled={isCreateLectureLoading || isGenerateCodeLoading || !!error || !code}
                   />
-                  {error && (
-                    <p className="errorText">{MESSAGES.COMMON_ERROR.UNKNOWN}</p>
-                  )}
+                  {error && <p className="errorText">{MESSAGES.COMMON_ERROR.UNKNOWN}</p>}
                 </div>
               )}
             </motion.div>
