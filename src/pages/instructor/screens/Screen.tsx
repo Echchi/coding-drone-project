@@ -2,14 +2,18 @@ import React from "react";
 import { cls } from "../../../shared/utils/cls.ts";
 import ControlButtons from "./ControlButtons.tsx";
 import { useStudentScreen } from "../../../features/instructor/hooks/useStudentScreen";
-import { useInstructorSocket } from "../../../features/instructor/hooks/useInstructorSocket";
+import { IStudent } from "../../../shared/types/student.ts";
+import { STATUS, DroneStatus } from "../../../shared/constants/status.ts";
 
 interface IScreenProps {
   student: IStudent;
 }
 
 export const Screen = ({ student }: IScreenProps) => {
-  const { codeActive, droneActive, handleScreenClick, toggleCodeActive, toggleDroneActive } = useStudentScreen(index);
+  const { codeActive, droneActive, handleScreenClick, toggleCodeActive, toggleDroneActive } = useStudentScreen({
+    studentId: student.studentId,
+    name: student.name || `아이디 ${student.studentId}`,
+  });
 
   return (
     <div
@@ -24,15 +28,17 @@ export const Screen = ({ student }: IScreenProps) => {
       onClick={handleScreenClick}
     >
       <div className="w-full h-9 rounded-t-lg flex justify-between items-center px-3 bg-gray-100">
-        <span className="font-semibold">{student?.name || `학생 ${index + 1}`}</span>
+        <span className="font-semibold">{student?.name || `아아디 ${student?.studentId}`}</span>
         <p className="flex items-center space-x-3">
           {student?.isConnected ? (
             <>
-              <span>{student?.droneStatus || "대기 중"}</span>
+              <span>{STATUS.DRONE_STATUS[(student?.droneStatus as DroneStatus) || "disconnected"]}</span>
               <span
                 className={cls(
                   "inline-block w-4 aspect-square rounded-full shadow",
-                  student?.droneStatus === "error" ? "bg-rose-500" : "bg-green-500"
+                  student?.droneStatus === "error" || student.droneStatus === "disconnected"
+                    ? "bg-rose-500"
+                    : "bg-green-500"
                 )}
               />
             </>

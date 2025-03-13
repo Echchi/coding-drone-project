@@ -1,20 +1,29 @@
 export interface IStudent {
   studentId: string;
   name: string;
-  code: string;
-  droneStatus: string;
+  code?: string;
+  droneStatus?: string;
   isConnected: boolean;
 }
 
 export interface IStudentList {
-  [key: number]: IStudent;
+  [key: string]: IStudent;
 }
 
 export interface ISocketEvents {
-  "student:join": { index: number; student: IStudent };
-  "student:leave": { index: number };
-  "student:code:update": { index: number; code: string };
-  "student:drone:status": { index: number; status: string };
+  instructorNotify: {
+    event: "studentJoined";
+    data: {
+      lectureCode: string;
+      studentId: string;
+      name: string;
+      students: IStudent[];
+    };
+  };
+  studentLeft: {
+    studentId: string;
+    students: IStudent[];
+  };
 }
 
 export interface ICodeUpdate {

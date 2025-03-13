@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import debounce from "../../../shared/utils/debounce.ts";
 import { UseGetLectureByCode } from "../../lecture/hooks/api/useGetLectureByCode.ts";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../shared/context/authContext.tsx";
 
 export const useStudentLogin = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export const useStudentLogin = () => {
     name: "",
   });
   const [codeCheck, setCodeCheck] = useState(false);
-
+  const { setRole } = useAuth();
   const handleOnChangeCode = (value: string) => {
     setCodeCheck(false);
     setErrors((prev) => ({ ...prev, code: "" }));
@@ -36,9 +37,7 @@ export const useStudentLogin = () => {
     }, 500);
   }, []);
 
-  const { data: lectureData, error: getLectureError } = UseGetLectureByCode(
-    form.code,
-  );
+  const { data: lectureData, error: getLectureError } = UseGetLectureByCode(form.code);
   useEffect(() => {
     if (!lectureData) return;
     if (lectureData) {
@@ -67,10 +66,12 @@ export const useStudentLogin = () => {
     mutate(form, {
       onSuccess: (data) => {
         sessionStorage.setItem("id", data.id);
+        sessionStorage.setItem("name", data.name);
+        setRole("student");
         navigate("/workspace");
       },
-      onError: (error) => {
-        if (error.status === 400) {
+      onError: (error: any) => {
+        if (error?.response?.status === 400) {
           setErrors((prev) => ({ ...prev, name: "이미 사용중인 이름입니다." }));
         }
       },

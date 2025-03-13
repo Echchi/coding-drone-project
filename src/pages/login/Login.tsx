@@ -9,7 +9,7 @@ const Login = () => {
   const [role, setRole] = useState<"student" | "instructor">("student");
 
   const handleInstructorOnClick = () => {
-    role === "student" ? setRole("instructor") : setRole("student");
+    setRole(role === "student" ? "instructor" : "student");
   };
 
   return (
