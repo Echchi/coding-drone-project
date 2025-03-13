@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLoginApi } from "./api/useLoginApi.ts";
 import { ILoginParams } from "../../../shared/types/instructor.ts";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
@@ -11,9 +11,18 @@ export const useInstructorLogin = () => {
     password: "",
   });
   const [error, setError] = useState("");
+  const [shouldNavigate, setShouldNavigate] = useState(false);
   const { mutate } = useLoginApi();
   const navigate = useNavigate();
   const { setRole } = useAuth();
+
+  useEffect(() => {
+    if (shouldNavigate) {
+      navigate("/control");
+      setShouldNavigate(false);
+    }
+  }, [shouldNavigate, navigate]);
+
   const handleOnChangeLonginInfo = (value: string, type: "userid" | "password") => {
     if (value.length === 0) {
       setError(MESSAGES.AUTH_ERROR.REQUIRED_FIELDS);
@@ -34,7 +43,7 @@ export const useInstructorLogin = () => {
           sessionStorage.setItem("instructorId", data.instructorId);
           setRole("instructor");
           setError("");
-          navigate("/control");
+          setShouldNavigate(true);
         },
         onError: () => {
           setError(MESSAGES.AUTH_ERROR.INVALID_CREDENTIALS);

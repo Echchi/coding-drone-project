@@ -6,7 +6,12 @@ import {
   selectedScreenState,
 } from "../../../shared/state/atom";
 
-export const useStudentScreen = (index: number) => {
+interface IStudentScreenProps {
+  studentId: string;
+  name: string;
+}
+
+export const useStudentScreen = ({ studentId, name }: IStudentScreenProps) => {
   const [codeActive, setCodeActive] = useState(true);
   const [droneActive, setDroneActive] = useState(true);
 
@@ -26,8 +31,8 @@ export const useStudentScreen = (index: number) => {
     event.stopPropagation();
     setSelectedStudent((prev) => ({
       ...prev,
-      id: index + 1,
-      name: `학생 ${index + 1}`,
+      id: studentId,
+      name: name,
     }));
   };
 

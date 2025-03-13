@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [role, setRole] = useState<"instructor" | "student" | null>(() => {
     const instructorId = sessionStorage.getItem("instructorId");
     const studentId = sessionStorage.getItem("id");
+    const name = sessionStorage.getItem("name");
 
     if (instructorId) {
       return "instructor";
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } else if (!instructorId && !studentId && role !== null) {
       setRole(null);
     }
-  }, [role]);
+  }, []);
 
   return <AuthContext.Provider value={{ role, setRole }}>{children}</AuthContext.Provider>;
 };
