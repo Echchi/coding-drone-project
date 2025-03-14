@@ -1,10 +1,11 @@
 import { useLectureConnectMutation } from "./api/useLectureConnectMutation.ts";
 import { useLecture } from "../../../shared/context/lectureProvider.tsx";
 import { useEffect, useMemo, useState } from "react";
-import debounce from "../../../shared/utils/debounce.ts";
+
 import { UseGetLectureByCode } from "../../lecture/hooks/api/useGetLectureByCode.ts";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../shared/context/authContext.tsx";
+import { debounce } from "../../../shared/utils/debounce.ts";
 
 export const useStudentLogin = () => {
   const navigate = useNavigate();

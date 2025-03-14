@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { cls } from "../../../shared/utils/cls.ts";
+import { cls } from "../utils/cls";
 
 interface IDivWithTItle {
   title: string;

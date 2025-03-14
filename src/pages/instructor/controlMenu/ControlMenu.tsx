@@ -35,13 +35,13 @@ const ControlMenu = ({ setDivision }: IMenu) => {
           </option>
         </select>
 
-        <button
+        {/* <button
           className="py-3 px-4 font-semibold text-lg bg-white rounded-xl shadow-lg disabledBtn"
           disabled={!hasSavedLecture}
         >
           전체
-        </button>
-        <button
+        </button> */}
+        {/* <button
           className="py-3 px-4 font-semibold text-lg bg-rose-100 text-rose-600 rounded-xl shadow-lg disabledBtn"
           disabled={!hasSavedLecture}
         >
@@ -52,7 +52,7 @@ const ControlMenu = ({ setDivision }: IMenu) => {
             )}
           />
           이상있음
-        </button>
+        </button>*/}
       </div>
       <div className="relative flex space-x-4">
         <CreateLectureCodeButton />

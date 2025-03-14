@@ -4,12 +4,13 @@ import ControlButtons from "./ControlButtons.tsx";
 import { useStudentScreen } from "../../../features/instructor/hooks/useStudentScreen";
 import { IStudent } from "../../../shared/types/student.ts";
 import { STATUS, DroneStatus } from "../../../shared/constants/status.ts";
+import MonacoEditor from "@monaco-editor/react";
 
 interface IScreenProps {
   student: IStudent;
 }
 
-export const Screen = ({ student }: IScreenProps) => {
+export default function Screen({ student }: IScreenProps) {
   const { codeActive, droneActive, handleScreenClick, toggleCodeActive, toggleDroneActive } = useStudentScreen({
     studentId: student.studentId,
     name: student.name || `아이디 ${student.studentId}`,
@@ -20,9 +21,9 @@ export const Screen = ({ student }: IScreenProps) => {
       key={`screen_${student.studentId}`}
       className={cls(
         "w-full h-full rounded-lg shadow-lg flex flex-col transition-all cursor-pointer hover:scale-[103%] hover:shadow-xl",
-        !codeActive && !droneActive ? "ring ring-cyan-500" : "",
-        codeActive ? "" : !droneActive ? "ring ring-cyan-500" : "ring ring-blue-500",
-        droneActive ? "" : !codeActive ? "ring ring-cyan-500" : "ring ring-green-500",
+        !codeActive && !droneActive ? "ring-offset-1 ring ring-cyan-500" : "",
+        codeActive ? "ring-offset-1" : !droneActive ? "ring ring-cyan-500" : "ring ring-blue-500",
+        droneActive ? "ring-offset-1" : !codeActive ? "ring ring-cyan-500" : "ring ring-green-500",
         !student?.isConnected ? "opacity-50" : ""
       )}
       onClick={handleScreenClick}
@@ -47,8 +48,31 @@ export const Screen = ({ student }: IScreenProps) => {
           )}
         </p>
       </div>
-      <div className="grow bg-white relative rounded-b-lg text-xs font-JetBrains p-2">
-        {student?.code || "console.log('hello');"}
+      <div className="grow relative rounded-b-lg overflow-hidden">
+        <MonacoEditor
+          height="100%"
+          defaultLanguage="python"
+          theme="light"
+          value={student?.code || ""}
+          className="font-JetBrains"
+          options={{
+            readOnly: true,
+            minimap: { enabled: false },
+            fontSize: 12,
+            scrollBeyondLastLine: false,
+            automaticLayout: true,
+            lineNumbers: "off",
+            renderLineHighlight: "none",
+            overviewRulerBorder: false,
+            scrollbar: {
+              vertical: "hidden",
+              horizontal: "hidden",
+            },
+            domReadOnly: true,
+            cursorStyle: "line",
+            cursorBlinking: "solid",
+          }}
+        />
         {!student?.isConnected && (
           <div className="absolute inset-0 w-full h-full bg-stone-500 rounded-b-lg flex flex-col justify-center items-center text-white font-bold text-xl">
             <p>연결되지않음</p>
@@ -69,4 +93,4 @@ export const Screen = ({ student }: IScreenProps) => {
       </div>
     </div>
   );
-};
+}
