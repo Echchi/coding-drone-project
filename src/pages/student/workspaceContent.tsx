@@ -1,9 +1,21 @@
 import React from "react";
 import Code from "./code/Code.tsx";
 import Drone from "./drone/Drone.tsx";
-import Chat from "./chat/chat.tsx";
+import Chat from "./chat/Chat.tsx";
 
-const WorkspaceContent = () => {
+interface WorkspaceContentProps {
+  isCodeEnabled: boolean;
+  isDroneEnabled: boolean;
+  onCodeChange: (code: string) => void;
+  onDroneStatusChange: (status: string) => void;
+}
+
+const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
+  isCodeEnabled,
+  isDroneEnabled,
+  onCodeChange,
+  onDroneStatusChange,
+}) => {
   return (
     <div className="w-full h-full grid grid-cols-3 gap-x-4">
       <div className="col-span-2 flex flex-col">

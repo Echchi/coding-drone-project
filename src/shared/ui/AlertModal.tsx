@@ -14,7 +14,7 @@ interface ModalProps {
   className?: string;
 }
 
-const Modal = ({
+const AlertModal = ({
   title,
   content,
   onClose,
@@ -118,4 +118,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default AlertModal;

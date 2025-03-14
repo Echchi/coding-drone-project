@@ -1,61 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
-import Input from "../../../sahred/ui/Input.tsx";
+import Input from "../../../shared/ui/Input.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 import { AnimatePresence, motion } from "framer-motion";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import MainButton from "../../../sahred/ui/MainButton.tsx";
+import MainButton from "../../../shared/ui/MainButton.tsx";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash";
+import debounce from "../../../shared/utils/debounce.ts";
+import { useLectureConnectMutation } from "../../../features/student/hooks/api/useLectureConnectMutation.ts";
+import { UseGetLectureByCode } from "../../../features/lecture/hooks/api/useGetLectureByCode.ts";
+import { useLecture } from "../../../shared/context/lectureProvider.tsx";
+import { useStudentLogin } from "../../../features/student/hooks/useStudentLogin.ts";
 
 const StudentLogin = () => {
-  const navigate = useNavigate();
-  const [form, setForm] = useState({
-    code: "",
-    nickName: "",
-  });
-  const [errors, setErrors] = useState({
-    code: "",
-    nickName: "",
-  });
-  const [codeCheck, setCodeCheck] = useState(false);
-
-  const handleOnChangeCode = (value: string) => {
-    if (value.length === 0) {
-      setErrors((prev) => ({ ...prev, code: "" }));
-      setCodeCheck(false);
-    }
-    debounceCode(value.trim());
-  };
-
-  const debounceCode = useMemo(() => {
-    return debounce((code: string) => {
-      setForm((prev) => ({ ...prev, code }));
-    }, 500);
-  }, []);
-
-  useEffect(() => {
-    if (form.code.length === 0) return;
-    if (form.code === "23899192") {
-      localStorage.setItem("role", "student");
-      setCodeCheck(true);
-      setErrors((prev) => ({ ...prev, code: "" }));
-    } else {
-      setErrors((prev) => ({
-        ...prev,
-        code: "접속 코드를 다시 확인해주세요!",
-      }));
-    }
-  }, [form.code]);
-
-  const handleLoginOnClick = () => {
-    if (form.nickName.trim().length > 0) {
-      localStorage.setItem("name", form.nickName.trim());
-      navigate("/workspace");
-    } else {
-      setErrors((prev) => ({ ...prev, nickName: "이름을 입력해주세요!" }));
-    }
-  };
+  const {
+    form,
+    errors,
+    codeCheck,
+    handleOnChangeCode,
+    handleOnChangeName,
+    handleLoginOnClick,
+  } = useStudentLogin();
 
   return (
     <div className="w-2/3 space-y-3">
@@ -73,8 +38,8 @@ const StudentLogin = () => {
       <AnimatePresence mode="popLayout">
         {codeCheck && (
           <motion.div
-            id={`nickname`}
-            key={`nickname`}
+            id={`name`}
+            key={`name`}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -85,11 +50,9 @@ const StudentLogin = () => {
               maxLength={10}
               icon={<FontAwesomeIcon icon={faUser} />}
               placeholder="이름"
-              value={form.nickName}
-              onChange={(event) =>
-                setForm((prev) => ({ ...prev, nickName: event.target.value }))
-              }
-              errorMessage={errors.nickName}
+              value={form.name}
+              onChange={(event) => handleOnChangeName(event.target.value)}
+              errorMessage={errors.name}
             />
           </motion.div>
         )}
@@ -98,7 +61,7 @@ const StudentLogin = () => {
         title={"시작하기"}
         onClick={handleLoginOnClick}
         className={"!mt-6"}
-        disabled={!codeCheck || form.nickName.trim().length === 0}
+        disabled={!codeCheck || form.name.trim().length === 0}
       />
     </div>
   );

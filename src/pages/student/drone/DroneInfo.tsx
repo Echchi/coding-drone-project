@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBatteryFull } from "@fortawesome/free-solid-svg-icons";
-import { cls } from "../../../sahred/utils/cls.ts";
+import { cls } from "../../../shared/utils/cls.ts";
 
 interface DroneInfoProps {
   isOn: boolean;

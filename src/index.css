@@ -4,7 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 html, body {
-    font-family: 'pretendard', sans-serif;
+    font-family: 'Pretendard', sans-serif;
     @apply text-stone-800 select-none;
 }
 
@@ -18,5 +18,13 @@ input {
 
 /* error */
 .error {
-    @apply text-orange-400 font-bold my-1 ml-1 px-1 text-lg bg-transparent h-fit bg-white
+    @apply text-orange-500 font-bold my-2 ml-1 px-1 text-lg bg-transparent h-fit w-full text-center
+}
+
+.errorText{
+    @apply text-center text-orange-600 font-semibold text-lg
+}
+
+.disabledBtn{
+    @apply disabled:shadow-none disabled:bg-stone-300 disabled:text-stone-500
 }

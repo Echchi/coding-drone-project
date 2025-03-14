@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import { IStudentList } from "../types/student";
 
 export const allStudentsCodeActiveState = atom({
   key: "allCodeActiveState",
@@ -11,7 +12,17 @@ export const allStudentsDroneActiveState = atom({
 export const selectedScreenState = atom({
   key: "selectedScreenState",
   default: {
-    id: 0,
+    id: "",
     name: "",
   },
+});
+
+export const codeModalState = atom({
+  key: "codeModalState",
+  default: false,
+});
+
+export const studentListState = atom<IStudentList>({
+  key: "studentListState",
+  default: {},
 });

@@ -3,7 +3,7 @@ import DroneControl from "./DroneControl.tsx";
 import DroneInfo from "./DroneInfo.tsx";
 import DivWithTitle from "../ui/DivWithTitle.tsx";
 
-const Drone = () => {
+const Drone = ({ isDroneEnabled }: { isDroneEnabled: boolean }) => {
   const [isOn, setIsOn] = useState(false);
   const [battery, setBattery] = useState(0);
   const [attitude, setAttitude] = useState({ roll: 0, pitch: 0, yaw: 0 });

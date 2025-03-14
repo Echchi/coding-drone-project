@@ -1,21 +1,78 @@
-import { SetStateAction } from "react";
-import DivWithTitle from "../../ui/DivWithTitle.tsx";
+import { useEffect, useState } from "react";
+import MonacoEditor from "@monaco-editor/react";
+import { useStudentSocket } from "../../../../features/student/hooks/useStudentSocket";
+import { debounce } from "../../../../shared/utils/debounce";
+import DivWithTitle from "../../ui/DivWithTitle";
 
-interface ICodeEditorProps {
-  setCodeInput: React.Dispatch<SetStateAction<string>>;
+interface CodeEditorProps {
   codeInput: string;
+  setCodeInput: React.Dispatch<React.SetStateAction<string>>;
   placeholder?: string;
+  readOnly?: boolean;
 }
 
-const CodeEditor = ({ setCodeInput, codeInput, placeholder }: ICodeEditorProps) => {
+const CodeEditor = ({ codeInput, setCodeInput, placeholder, readOnly = false }: CodeEditorProps) => {
+  const { submitCode } = useStudentSocket();
+  const [editorValue, setEditorValue] = useState(codeInput);
+
+  useEffect(() => {
+    setEditorValue(codeInput);
+  }, [codeInput]);
+
+  // 디바운스된 코드 제출 함수
+  const debouncedSubmitCode = debounce((code: string) => {
+    submitCode(code);
+  }, 500);
+
+  const handleEditorChange = (value: string | undefined) => {
+    if (value === undefined) return;
+
+    setEditorValue(value);
+    setCodeInput(value); // `drone-control`의 상태 관리 방식 유지
+    debouncedSubmitCode(value);
+  };
+
+  // 컴포넌트 언마운트 시 디바운스 취소
+  useEffect(() => {
+    return () => {
+      debouncedSubmitCode.cancel?.();
+    };
+  }, []);
+
   return (
-    <textarea
-      className="w-full min-h-[200px] bg-transparent pr-5 text-lg outline-0 resize-none font-mono text-gray-600 placeholder:text-lg placeholder:text-gray-400"
-      placeholder={placeholder}
-      onChange={(event) => setCodeInput(event.target.value)}
-      value={codeInput}
-      spellCheck={false}
-    />
+    <DivWithTitle
+      title={"코드 에디터"}
+      titleClassName={"bg-lime-500 ring-lime-500"}
+      divClassName={"w-full h-2/3 ring-lime-500"}
+    >
+      <div className="h-full">
+        <MonacoEditor
+          height="100%"
+          defaultLanguage="python"
+          theme="light"
+          value={editorValue}
+          onChange={handleEditorChange}
+          className="rounded-lg py-4"
+          options={{
+            readOnly,
+            minimap: { enabled: false },
+            fontSize: 16,
+            scrollBeyondLastLine: false,
+            automaticLayout: true,
+            lineNumbers: "off",
+            renderLineHighlight: "none",
+            overviewRulerBorder: false,
+            scrollbar: {
+              vertical: "hidden",
+              horizontal: "hidden",
+            },
+            domReadOnly: true,
+            cursorStyle: "line",
+            cursorBlinking: "solid",
+          }}
+        />
+      </div>
+    </DivWithTitle>
   );
 };
 
