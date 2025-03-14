@@ -2,10 +2,11 @@ import { useEffect, useRef, useCallback } from "react";
 import { Socket } from "socket.io-client";
 import { useRecoilState } from "recoil";
 import { studentSocketState } from "../model/socket";
-import { IStudentSocketEvents, IStudentEmitEvents } from "../types/socket";
+import { IStudentSocketEvents, IStudentEmitEvents } from "../../../shared/types/socket";
 import { useLecture } from "../../../shared/context/lectureProvider";
 import { socketManager } from "../../../shared/libs/socket";
 import { useAuth } from "../../../shared/context/authContext.tsx";
+
 export const useStudentSocket = () => {
   const socketRef = useRef<Socket | null>(null);
   const { savedLecture } = useLecture();
@@ -24,66 +25,63 @@ export const useStudentSocket = () => {
       return;
     }
 
-    const socket = socketManager.connect(`/student`);
+    const studentId = sessionStorage.getItem("id");
+    const name = sessionStorage.getItem("name");
+
+    if (!studentId || !name) {
+      console.log("Missing student information");
+      return;
+    }
+
+    // 이미 연결된 소켓이 있다면 연결 해제
+    if (socketRef.current) {
+      console.log("Cleaning up existing socket connection");
+      socketRef.current.disconnect();
+    }
+
+    console.log("Connecting to student socket...", {
+      lectureCode: savedLecture.code,
+      studentId,
+      name,
+    });
+
+    const socket = socketManager.connect("/student");
     socketRef.current = socket;
 
-    console.log("Attempting to connect to student socket...");
-
     socket.on("connect", () => {
-      const id = sessionStorage.getItem("id");
-      const name = sessionStorage.getItem("name");
+      console.log("Student socket connected successfully");
 
-      console.log("Student socket connected successfully with:", {
+      // 강의실 입장 시도
+      const joinData = {
         lectureCode: savedLecture.code,
-        studentId: id,
-        name: name,
-      });
-
-      if (!id || !name) {
-        console.error("Missing student information:", { id, name });
-        return;
-      }
-
-      socket.emit("joinLecture", {
-        lectureCode: savedLecture.code,
-        studentId: id,
+        studentId,
         name,
-      });
+      };
 
-      console.log("Emitted joinLecture event");
+      console.log("Attempting to join lecture room:", joinData);
+      socket.emit("joinLecture", joinData);
+    });
+
+    socket.on("joinSuccess", (response) => {
+      console.log("Successfully joined lecture:", response);
       updateSocketState({ isConnected: true });
-    });
 
-    socket.on("joinSuccess", (data) => {
-      console.log("Successfully joined lecture:", data);
-    });
-
-    socket.on("connect_error", (error) => {
-      console.error("Socket connection error:", error);
-      console.error("Connection details:", {
-        namespace: "/student",
-        lectureCode: savedLecture.code,
-      });
-      updateSocketState({ isConnected: false });
-    });
-
-    socket.on("code:update", (data: IStudentSocketEvents["code:update"]) => {
-      console.log("Code update received:", data);
-      // TODO: 코드 에디터 업데이트 처리
-    });
-
-    socket.on("control:update", (data: IStudentSocketEvents["control:update"]) => {
-      console.log("Control update received:", data);
-      if (data.type === "code") {
-        updateSocketState({ isCodeEnabled: data.value });
-      } else if (data.type === "drone") {
-        updateSocketState({ isDroneEnabled: data.value });
+      // 서버에서 받은 코드가 있으면 상태 업데이트
+      if (response.code) {
+        updateSocketState({ code: response.code });
       }
+    });
+
+    socket.on("code:saved", (response) => {
+      console.log("Code save response:", response);
     });
 
     socket.on("disconnect", () => {
-      console.log("Student socket disconnected");
-      updateSocketState({ isConnected: false });
+      console.log("❌ Student socket disconnected");
+    });
+
+    socket.on("connect_error", (error: Error) => {
+      console.error("🚨 Student socket connection error:", error);
     });
 
     return () => {
@@ -92,7 +90,32 @@ export const useStudentSocket = () => {
         socket.disconnect();
       }
     };
-  }, [savedLecture.code, updateSocketState]);
+  }, [savedLecture.code]);
+
+  const submitCode = useCallback(
+    (code: string) => {
+      if (!socketRef.current?.connected) {
+        console.log("Cannot submit code - socket not connected");
+        return;
+      }
+
+      const studentId = sessionStorage.getItem("id");
+      const lectureCode = savedLecture.code;
+
+      if (!studentId || !lectureCode) {
+        console.log("Missing required data for code submission");
+        return;
+      }
+
+      console.log("Submitting code:", { lectureCode, studentId, codeLength: code.length });
+      socketRef.current.emit("code:submit", {
+        lectureCode,
+        studentId,
+        code,
+      });
+    },
+    [savedLecture.code]
+  );
 
   const sendMessage = useCallback(<T extends keyof IStudentEmitEvents>(event: T, data: IStudentEmitEvents[T]) => {
     if (!socketRef.current?.connected) return;
@@ -102,6 +125,7 @@ export const useStudentSocket = () => {
   return {
     socket: socketRef.current,
     socketState,
+    submitCode,
     sendMessage,
   };
 };

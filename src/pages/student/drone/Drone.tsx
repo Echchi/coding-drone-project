@@ -3,7 +3,7 @@ import DroneInfo from "./DroneInfo.tsx";
 import DroneControl from "./DroneControl.tsx";
 import DivWithTitle from "../ui/DivWithTitle.tsx";
 
-const Drone = () => {
+const Drone = ({ isDroneEnabled }: { isDroneEnabled: boolean }) => {
   const [isOn, setIsOn] = useState(false);
   return (
     <DivWithTitle

@@ -1,16 +1,29 @@
+import { DroneStatus } from "../constants/status";
+
 export interface ILectureConnectParams {
-  name: string;
   code: string;
+  name: string;
 }
 
 export interface IStudent {
   studentId: string;
   name: string;
   code?: string;
-  droneStatus?: string;
+  droneStatus?: DroneStatus;
   isConnected: boolean;
 }
 
 export interface IStudentList {
-  [key: number]: IStudent;
+  [key: string]: IStudent;
+}
+
+export interface IStudentScreenProps {
+  studentId: string;
+  name: string;
+}
+
+export interface IControlUpdate {
+  studentId: string;
+  type: "code" | "drone";
+  value: boolean;
 }

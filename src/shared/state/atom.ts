@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { IStudentList } from "../../features/instructor/types/student";
+import { IStudentList } from "../types/student";
 
 export const allStudentsCodeActiveState = atom({
   key: "allCodeActiveState",

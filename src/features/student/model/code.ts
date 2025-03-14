@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { ICodeState } from "../types/code";
+import { ICodeState } from "../../../shared/types/code";
 
 export const codeState = atom<ICodeState>({
   key: "studentCodeState",

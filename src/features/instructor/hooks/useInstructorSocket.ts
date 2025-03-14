@@ -4,7 +4,7 @@ import { socketManager } from "../../../shared/libs/socket";
 import { useLecture } from "../../../shared/context/lectureProvider";
 import { useRecoilState } from "recoil";
 import { studentListState } from "../../../shared/state/atom";
-import { IStudent } from "../types/student";
+import { IStudent } from "../../../shared/types/student";
 import { useAuth } from "../../../shared/context/authContext";
 
 export const useInstructorSocket = () => {

@@ -4,7 +4,6 @@ import { useLecture } from "../../shared/context/lectureProvider.tsx";
 import { useStudentSocket } from "../../features/student/hooks/useStudentSocket";
 
 const Workspace = () => {
-  const { savedLecture } = useLecture();
   const { socketState, sendMessage } = useStudentSocket();
 
   const handleCodeChange = useCallback(
