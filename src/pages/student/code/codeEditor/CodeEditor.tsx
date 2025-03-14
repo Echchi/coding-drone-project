@@ -3,15 +3,15 @@ import MonacoEditor from "@monaco-editor/react";
 import { useStudentSocket } from "../../../../features/student/hooks/useStudentSocket";
 import { debounce } from "../../../../shared/utils/debounce";
 import DivWithTitle from "../../ui/DivWithTitle";
-
+import { HEADER_CODE, FOOTER_CODE } from "../../../../features/student/constants/code";
 interface CodeEditorProps {
   codeInput: string;
   setCodeInput: React.Dispatch<React.SetStateAction<string>>;
-  placeholder?: string;
   readOnly?: boolean;
+  placeholder?: string;
 }
 
-const CodeEditor = ({ codeInput, setCodeInput, placeholder, readOnly = false }: CodeEditorProps) => {
+const CodeEditor = ({ codeInput, setCodeInput, readOnly = false, placeholder }: CodeEditorProps) => {
   const { submitCode } = useStudentSocket();
   const [editorValue, setEditorValue] = useState(codeInput);
 
@@ -45,32 +45,38 @@ const CodeEditor = ({ codeInput, setCodeInput, placeholder, readOnly = false }: 
       titleClassName={"bg-lime-500 ring-lime-500"}
       divClassName={"w-full h-2/3 ring-lime-500"}
     >
-      <div className="h-full">
-        <MonacoEditor
-          height="100%"
-          defaultLanguage="python"
-          theme="light"
-          value={editorValue}
-          onChange={handleEditorChange}
-          className="rounded-lg py-4"
-          options={{
-            readOnly,
-            minimap: { enabled: false },
-            fontSize: 16,
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-            lineNumbers: "off",
-            renderLineHighlight: "none",
-            overviewRulerBorder: false,
-            scrollbar: {
-              vertical: "hidden",
-              horizontal: "hidden",
-            },
-            domReadOnly: true,
-            cursorStyle: "line",
-            cursorBlinking: "solid",
-          }}
-        />
+      <div className="h-full overflow-y-auto flex flex-col">
+        <pre className="px-6 py-4 text-sm flex-shrink-0">{HEADER_CODE}</pre>
+
+        <div className="flex-1 min-h-0">
+          <MonacoEditor
+            height="100%"
+            defaultLanguage="python"
+            theme="light"
+            value={editorValue}
+            onChange={handleEditorChange}
+            className="rounded-lg"
+            options={{
+              readOnly,
+              minimap: { enabled: false },
+              fontSize: 16,
+              scrollBeyondLastLine: false,
+              automaticLayout: true,
+              lineNumbers: "off",
+              renderLineHighlight: "none",
+              overviewRulerBorder: false,
+              scrollbar: {
+                vertical: "hidden",
+                horizontal: "hidden",
+              },
+              domReadOnly: true,
+              cursorStyle: "line",
+              cursorBlinking: "solid",
+            }}
+          />
+        </div>
+
+        <pre className="px-6 py-4 text-sm flex-shrink-0">{FOOTER_CODE}</pre>
       </div>
     </DivWithTitle>
   );
