@@ -17,7 +17,7 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
   onDroneStatusChange,
 }) => {
   return (
-    <div className="w-full h-[calc(100vh-10rem)] grid grid-cols-3 gap-x-4">
+    <div className="w-full h-full grid grid-cols-3 gap-x-10">
       <div className="col-span-2 min-h-0">
         <Code />
       </div>
@@ -25,7 +25,7 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
         <div className="h-3/5 min-h-0">
           <Drone isDroneEnabled={isDroneEnabled} />
         </div>
-        <div className="h-2/5 min-h-0">
+        <div className="h-2/5 min-h-0 pt-10">
           <Chat />
         </div>
       </div>

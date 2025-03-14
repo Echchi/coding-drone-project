@@ -70,18 +70,36 @@ export const useStudentSocket = () => {
       if (response.code) {
         updateSocketState({ code: response.code });
       }
+
+      // 서버에서 받은 드론 상태가 있으면 상태 업데이트
+      if (response.droneStatus) {
+        updateSocketState({ droneStatus: response.droneStatus });
+      }
     });
 
     socket.on("code:saved", (response) => {
       console.log("Code save response:", response);
     });
 
+    socket.on("drone:saved", (response) => {
+      console.log("Drone status save response:", response);
+    });
+
+    socket.on("drone:updated", (data) => {
+      console.log("Drone status update:", data);
+      if (data.status) {
+        updateSocketState({ droneStatus: data.status });
+      }
+    });
+
     socket.on("disconnect", () => {
       console.log("❌ Student socket disconnected");
+      updateSocketState({ isConnected: false });
     });
 
     socket.on("connect_error", (error: Error) => {
       console.error("🚨 Student socket connection error:", error);
+      updateSocketState({ isConnected: false });
     });
 
     return () => {
@@ -90,7 +108,7 @@ export const useStudentSocket = () => {
         socket.disconnect();
       }
     };
-  }, [savedLecture.code]);
+  }, [savedLecture.code, updateSocketState]);
 
   const submitCode = useCallback(
     (code: string) => {
