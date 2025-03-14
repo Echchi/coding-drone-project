@@ -7,6 +7,7 @@ export interface IStudentEmitEvents {
   joinLecture: { lectureCode: string };
   "code:update": { code: string };
   "drone:status": { status: string };
+  "drone:update": { status: string; lectureCode: string; studentId: string };
 }
 
 export interface IStudentSocketState {
@@ -14,6 +15,7 @@ export interface IStudentSocketState {
   isCodeEnabled: boolean;
   isDroneEnabled: boolean;
   code?: string;
+  droneStatus?: string;
 }
 
 export interface ISocketEvents {
