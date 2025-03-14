@@ -5,24 +5,21 @@ import { debounce } from "../../../../shared/utils/debounce";
 import DivWithTitle from "../../ui/DivWithTitle";
 
 interface CodeEditorProps {
-  initialValue?: string;
-  onChange?: (value: string) => void;
+  codeInput: string;
+  setCodeInput: React.Dispatch<React.SetStateAction<string>>;
+  placeholder?: string;
   readOnly?: boolean;
 }
 
-export const CodeEditor = ({ initialValue, onChange, readOnly = false }: CodeEditorProps) => {
+const CodeEditor = ({ codeInput, setCodeInput, placeholder, readOnly = false }: CodeEditorProps) => {
   const { submitCode } = useStudentSocket();
-  const [editorValue, setEditorValue] = useState(
-    initialValue || "# 파이썬으로 Hello, World! 출력하기\nprint('Hello, World!')"
-  );
+  const [editorValue, setEditorValue] = useState(codeInput);
 
   useEffect(() => {
-    if (initialValue) {
-      setEditorValue(initialValue);
-    }
-  }, [initialValue]);
+    setEditorValue(codeInput);
+  }, [codeInput]);
 
-  // 디바운스된 코드 제출 함수 생성
+  // 디바운스된 코드 제출 함수
   const debouncedSubmitCode = debounce((code: string) => {
     submitCode(code);
   }, 500);
@@ -31,11 +28,8 @@ export const CodeEditor = ({ initialValue, onChange, readOnly = false }: CodeEdi
     if (value === undefined) return;
 
     setEditorValue(value);
-    onChange?.(value);
-
-    if (!readOnly) {
-      debouncedSubmitCode(value);
-    }
+    setCodeInput(value); // `drone-control`의 상태 관리 방식 유지
+    debouncedSubmitCode(value);
   };
 
   // 컴포넌트 언마운트 시 디바운스 취소
@@ -81,3 +75,5 @@ export const CodeEditor = ({ initialValue, onChange, readOnly = false }: CodeEdi
     </DivWithTitle>
   );
 };
+
+export default CodeEditor;
