@@ -36,8 +36,14 @@ export const useStudentScreen = ({ studentId, name }: IStudentScreenProps) => {
     }));
   };
 
-  const toggleCodeActive = () => setCodeActive(!codeActive);
-  const toggleDroneActive = () => setDroneActive(!droneActive);
+  const toggleCodeActive = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    setCodeActive(!codeActive);
+  };
+  const toggleDroneActive = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    setDroneActive(!droneActive);
+  };
 
   return {
     codeActive,

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { cls } from "../../../shared/utils/cls.ts";
 import ControlButtons from "./ControlButtons.tsx";
 import { useStudentScreen } from "../../../features/instructor/hooks/useStudentScreen";
@@ -20,7 +20,7 @@ export default function Screen({ student }: IScreenProps) {
     <div
       key={`screen_${student.studentId}`}
       className={cls(
-        "w-full h-full rounded-lg shadow-lg flex flex-col transition-all cursor-pointer hover:scale-[103%] hover:shadow-xl",
+        "w-[95%] h-[95%] rounded-lg shadow-lg flex flex-col transition-all cursor-pointer hover:scale-[102%] hover:shadow-xl",
         !codeActive && !droneActive ? "ring-offset-1 ring ring-cyan-500" : "",
         codeActive ? "ring-offset-1" : !droneActive ? "ring ring-cyan-500" : "ring ring-blue-500",
         droneActive ? "ring-offset-1" : !codeActive ? "ring ring-cyan-500" : "ring ring-green-500",
@@ -48,9 +48,9 @@ export default function Screen({ student }: IScreenProps) {
           )}
         </p>
       </div>
-      <div className="grow relative rounded-b-lg overflow-hidden">
+      <div className="grow relative rounded-b-lg overflow-y-auto h-full">
         <MonacoEditor
-          height="100%"
+          height="80%"
           defaultLanguage="python"
           theme="light"
           value={student?.code || ""}
@@ -78,14 +78,14 @@ export default function Screen({ student }: IScreenProps) {
             <p>연결되지않음</p>
           </div>
         )}
-        <div className="z-10 bottom-2 right-2 absolute w-full h-9 rounded-t-lg flex justify-end items-center">
-          <div className="flex space-x-2 w-2/5">
+        <div className="bottom-0 right-0 pr-2 absolute w-full h-9 rounded-t-lg flex justify-end items-center ">
+          <div className="flex space-x-2 w-3/5">
             <ControlButtons
               codeActive={codeActive}
               handleCodeOnClick={toggleCodeActive}
               droneActive={droneActive}
               handleDroneOnClick={toggleDroneActive}
-              isSmall={true}
+              size="sm"
               disabled={!student?.isConnected}
             />
           </div>

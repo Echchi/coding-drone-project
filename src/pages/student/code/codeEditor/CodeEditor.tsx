@@ -1,17 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import MonacoEditor from "@monaco-editor/react";
 import { useStudentSocket } from "../../../../features/student/hooks/useStudentSocket";
 import { debounce } from "../../../../shared/utils/debounce";
 import DivWithTitle from "../../ui/DivWithTitle";
 import { HEADER_CODE, FOOTER_CODE } from "../../../../features/student/constants/code";
+
 interface CodeEditorProps {
   codeInput: string;
   setCodeInput: React.Dispatch<React.SetStateAction<string>>;
   readOnly?: boolean;
   placeholder?: string;
+  isCodeEnabled?: boolean;
 }
 
-const CodeEditor = ({ codeInput, setCodeInput, readOnly = false, placeholder }: CodeEditorProps) => {
+const CodeEditor = ({
+  codeInput,
+  setCodeInput,
+  readOnly = false,
+  placeholder,
+  isCodeEnabled = true,
+}: CodeEditorProps) => {
   const { submitCode } = useStudentSocket();
   const [editorValue, setEditorValue] = useState(codeInput);
 
@@ -21,23 +29,18 @@ const CodeEditor = ({ codeInput, setCodeInput, readOnly = false, placeholder }: 
 
   // 디바운스된 코드 제출 함수
   const debouncedSubmitCode = debounce((code: string) => {
+    console.log("디바운스 후 코드 제출:", code.substring(0, 30) + "...");
     submitCode(code);
   }, 500);
 
   const handleEditorChange = (value: string | undefined) => {
     if (value === undefined) return;
+    if (!isCodeEnabled) return;
 
     setEditorValue(value);
-    setCodeInput(value); // `drone-control`의 상태 관리 방식 유지
+    setCodeInput(value);
     debouncedSubmitCode(value);
   };
-
-  // 컴포넌트 언마운트 시 디바운스 취소
-  useEffect(() => {
-    return () => {
-      debouncedSubmitCode.cancel?.();
-    };
-  }, []);
 
   return (
     <DivWithTitle
@@ -57,7 +60,7 @@ const CodeEditor = ({ codeInput, setCodeInput, readOnly = false, placeholder }: 
             onChange={handleEditorChange}
             className="rounded-lg"
             options={{
-              readOnly,
+              readOnly: !isCodeEnabled || readOnly,
               minimap: { enabled: false },
               fontSize: 16,
               scrollBeyondLastLine: false,
@@ -69,7 +72,7 @@ const CodeEditor = ({ codeInput, setCodeInput, readOnly = false, placeholder }: 
                 vertical: "hidden",
                 horizontal: "hidden",
               },
-              domReadOnly: true,
+              domReadOnly: !isCodeEnabled || readOnly,
               cursorStyle: "line",
               cursorBlinking: "solid",
             }}

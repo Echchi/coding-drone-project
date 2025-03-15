@@ -12,7 +12,7 @@ export const StudentGrid = ({ division, students }: IStudentGridProps) => {
   return (
     <div
       className={cls(
-        "w-full h-[95%] grid gap-3 overflow-y-auto",
+        "w-full h-[95%] grid gap-3 overflow-y-auto self-center place-items-center",
         division === "4x3"
           ? "grid-cols-4 grid-rows-3"
           : division === "4x4"

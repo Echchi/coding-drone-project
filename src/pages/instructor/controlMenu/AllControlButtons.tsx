@@ -3,22 +3,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import ControlButtons from "../screens/ControlButtons.tsx";
 import NotificationModal from "../../../shared/ui/NotificationModal.tsx";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  allStudentsCodeActiveState,
-  allStudentsDroneActiveState,
-} from "../../../shared/state/atom.ts";
+import { allStudentsCodeActiveState, allStudentsDroneActiveState } from "../../../shared/state/atom.ts";
 import { useLecture } from "../../../shared/context/lectureProvider.tsx";
 
 const AllControlButtons = () => {
   const [isControlOpen, setIsControlOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
 
-  const [allStudentsCodeActive, setAllStudentsCodeActive] = useRecoilState(
-    allStudentsCodeActiveState,
-  );
-  const [allStudentsDroneStop, setAllStudentsDroneActive] = useRecoilState(
-    allStudentsDroneActiveState,
-  );
+  const [allStudentsCodeActive, setAllStudentsCodeActive] = useRecoilState(allStudentsCodeActiveState);
+  const [allStudentsDroneStop, setAllStudentsDroneActive] = useRecoilState(allStudentsDroneActiveState);
 
   const { hasSavedLecture } = useLecture();
   const handleClickCodeActive = () => {
@@ -68,13 +61,12 @@ const AllControlButtons = () => {
               handleCodeOnClick={handleClickCodeActive}
               droneActive={allStudentsDroneStop}
               handleDroneOnClick={handleClickDroneActive}
+              size="lg"
             />
           </motion.div>
         )}
       </AnimatePresence>
-      {modalContent && (
-        <NotificationModal content={`모든 학생의 ${modalContent}`} />
-      )}
+      {modalContent && <NotificationModal content={`모든 학생의 ${modalContent}`} />}
     </>
   );
 };
