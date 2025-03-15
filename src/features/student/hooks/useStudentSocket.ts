@@ -20,7 +20,6 @@ export const useStudentSocket = () => {
 
   useEffect(() => {
     if (!savedLecture.code) {
-      console.log("강의 코드가 없어 소켓 연결을 시도하지 않습니다");
       return;
     }
 
@@ -28,30 +27,19 @@ export const useStudentSocket = () => {
     const name = sessionStorage.getItem("name");
 
     if (!studentId || !name) {
-      console.log("학생 정보가 없어 소켓 연결을 시도하지 않습니다");
       return;
     }
 
-    // 이미 연결된 소켓이 있다면 연결 해제
-    if (socketRef.current) {
-      console.log("기존 소켓 연결 정리 중...");
-      socketRef.current.disconnect();
-    }
-
-    console.log("학생 소켓 연결 시도...", {
-      lectureCode: savedLecture.code,
-      studentId,
-      name,
-    });
-
+    // 소켓 연결 생성
     const socket = socketManager.connect("/student");
     socketRef.current = socket;
 
+    // 연결 성공 시 호출되는 이벤트
     socket.on("connect", () => {
-      console.log("학생 소켓 연결 성공");
+      console.log("소켓 연결 성공");
       updateSocketState({ isConnected: true, isCodeEnabled: true, isDroneEnabled: true });
 
-      // 강의실 입장 시도
+      // 연결 성공 후 강의실 참여 요청
       socket.emit("joinLecture", {
         lectureCode: savedLecture.code,
         studentId,
@@ -60,11 +48,13 @@ export const useStudentSocket = () => {
       console.log("강의실 참여 요청 전송:", savedLecture.code);
     });
 
+    // 강의실 참여 성공 시
     socket.on("joinSuccess", (response) => {
-      console.log("강의실 참여 성공:", response);
+      console.log("강의실 참여 성공, 초기 코드 수신:", response);
 
       // 서버에서 받은 코드가 있으면 상태 업데이트
-      if (response.code) {
+      if (response.code !== undefined) {
+        console.log("초기 코드 설정:", response.code.substring(0, 30) + "...");
         updateSocketState({ code: response.code });
       }
 
@@ -80,6 +70,26 @@ export const useStudentSocket = () => {
 
       if (response.droneActive !== undefined) {
         updateSocketState({ isDroneEnabled: response.droneActive });
+      }
+    });
+
+    // 기존 joinResponse 이벤트에도 응답
+    socket.on("joinResponse", (data) => {
+      console.log("joinResponse 이벤트 수신:", data);
+
+      // 서버에서 초기 상태 값 적용
+      if (data.codeActive !== undefined) {
+        updateSocketState({ isCodeEnabled: data.codeActive });
+      }
+
+      if (data.droneActive !== undefined) {
+        updateSocketState({ isDroneEnabled: data.droneActive });
+      }
+
+      // 초기 코드 설정
+      if (data.code !== undefined) {
+        console.log("joinResponse에서 초기 코드 설정:", data.code.substring(0, 30) + "...");
+        updateSocketState({ code: data.code });
       }
     });
 

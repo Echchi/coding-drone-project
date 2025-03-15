@@ -8,6 +8,10 @@ export const useCodeExecution = () => {
   const [result, setResult] = useState("");
   const [isDroneConnected, setIsDroneConnected] = useState(false);
 
+  // 소켓 상태에서 코드 활성화 및 드론 활성화 상태 가져오기
+  const isCodeEnabled = socketState.isCodeEnabled;
+  const isDroneEnabled = socketState.isDroneEnabled;
+
   const getFullCode = useCallback((userCode: string) => {
     return `${HEADER_CODE}\n${userCode}\n${FOOTER_CODE}`;
   }, []);
@@ -15,6 +19,18 @@ export const useCodeExecution = () => {
   // 실제 파이썬 코드 실행 (드론 연결 필요)
   const executePythonCode = useCallback(
     async (userCode: string) => {
+      // 코드 실행이 비활성화되어 있으면 실행하지 않음
+      if (!isCodeEnabled) {
+        setResult("코드 실행이 비활성화되었습니다.");
+        return;
+      }
+
+      // 드론 조작이 비활성화되어 있으면 실행하지 않음
+      if (!isDroneEnabled) {
+        setResult("드론 조작이 비활성화되었습니다.");
+        return;
+      }
+
       if (!isDroneConnected) {
         setResult("드론이 연결되어 있지 않습니다. 먼저 드론을 연결하세요.");
         return;
@@ -101,11 +117,11 @@ export const useCodeExecution = () => {
         }
 
         setResult(executionLog ? `[실행 결과]\n${executionLog}코드 실행 완료` : "실행할 드론 명령이 없습니다.");
-      } catch (error: unknown) {
+      } catch (error) {
         setResult(error instanceof Error ? `오류 발생: ${error.message}` : "알 수 없는 오류가 발생했습니다.");
       }
     },
-    [isDroneConnected, getFullCode]
+    [isDroneConnected, getFullCode, isCodeEnabled, isDroneEnabled]
   );
 
   return {
@@ -113,5 +129,7 @@ export const useCodeExecution = () => {
     isDroneConnected,
     setIsDroneConnected,
     executePythonCode,
+    isCodeEnabled,
+    isDroneEnabled,
   };
 };
