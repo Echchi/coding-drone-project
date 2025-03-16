@@ -23,6 +23,7 @@ export const useStudentSocket = () => {
 
     // 소켓 연결 생성
     const socket = socketManager.connect("/student");
+
     socketRef.current = socket;
 
     socket.on("connect", () => {
@@ -36,6 +37,7 @@ export const useStudentSocket = () => {
 
       // 강의실 참여 요청
       socket.emit("joinLecture", { lectureCode: savedLecture.code, studentId, name });
+
       console.log("📤 강의실 참여 요청 전송:", savedLecture.code);
     });
 
@@ -62,13 +64,23 @@ export const useStudentSocket = () => {
 
     // 코드 및 드론 활성화 상태 변경
     socket.on("code:activeChanged", (data) => {
-      console.log("🔄 코드 활성화 상태 변경:", data.active);
+      console.log("🔄 코드 활성화 상태 변경:", data);
+
       setSocketState((prev) => ({ ...prev, isCodeEnabled: Boolean(data.active) }));
     });
 
     socket.on("drone:activeChanged", (data) => {
       console.log("🔄 드론 활성화 상태 변경:", data.active);
       setSocketState((prev) => ({ ...prev, isDroneEnabled: Boolean(data.active) }));
+    });
+
+    // 강사가 수정한 코드 수신
+    socket.on("code:updatedByInstructor", (data) => {
+      console.log("👨‍🏫 강사가 코드를 수정했습니다:", data.code.substring(0, 30) + "...");
+      setSocketState((prev) => ({
+        ...prev,
+        code: data.code,
+      }));
     });
 
     socket.on("disconnect", () => {

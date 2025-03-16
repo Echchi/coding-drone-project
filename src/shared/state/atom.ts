@@ -1,5 +1,6 @@
 import { atom } from "recoil";
 import { IStudentList } from "../types/student";
+import { Socket } from "socket.io-client";
 
 export const allStudentsCodeActiveState = atom({
   key: "allCodeActiveState",

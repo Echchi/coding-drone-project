@@ -40,6 +40,7 @@ export const useInstructorSocket = () => {
     });
 
     const socket = socketManager.connect("/instructor");
+
     socketRef.current = socket;
 
     socket.on("connect", () => {
@@ -141,8 +142,6 @@ export const useInstructorSocket = () => {
             code: student.code || "",
             droneStatus: student.droneStatus || "disconnected",
             isConnected: true,
-            codeActive: student.codeActive || false,
-            droneActive: student.droneActive || false,
           };
         });
 
@@ -183,8 +182,6 @@ export const useInstructorSocket = () => {
             code: student.code || "",
             droneStatus: student.droneStatus || "disconnected",
             isConnected: true,
-            codeActive: student.codeActive || false,
-            droneActive: student.droneActive || false,
           };
         });
 
@@ -226,7 +223,6 @@ export const useInstructorSocket = () => {
             droneStatus: student.droneStatus || "disconnected",
             isConnected: true,
             codeActive: student.codeActive !== undefined ? student.codeActive : active,
-            droneActive: student.droneActive || false,
           };
         });
 
@@ -267,7 +263,7 @@ export const useInstructorSocket = () => {
             code: student.code || "",
             droneStatus: student.droneStatus || "disconnected",
             isConnected: true,
-            codeActive: student.codeActive || false,
+
             droneActive: student.droneActive !== undefined ? student.droneActive : active,
           };
         });
@@ -304,6 +300,20 @@ export const useInstructorSocket = () => {
         console.log("학생 목록 업데이트 완료:", newList);
         return newList;
       });
+    });
+
+    // 코드 수정 응답 처리
+    socket.on("code:editResponse", (data) => {
+      console.log("🖊️ 코드 수정 응답 수신:", data);
+      const { success, studentId } = data;
+
+      if (success) {
+        // 성공 처리 (알림 표시 등)
+        console.log(`학생 ${studentId}의 코드가 성공적으로 수정되었습니다.`);
+      } else {
+        // 실패 처리
+        console.error(`학생 ${studentId}의 코드 수정에 실패했습니다.`);
+      }
     });
 
     socket.on("disconnect", () => {
