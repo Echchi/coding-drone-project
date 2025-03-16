@@ -3,30 +3,29 @@ import { AnimatePresence, motion } from "framer-motion";
 import ControlButtons from "../screens/ControlButtons.tsx";
 import NotificationModal from "../../../shared/ui/NotificationModal.tsx";
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  allStudentsCodeActiveState,
-  allStudentsDroneActiveState,
-} from "../../../shared/state/atom.ts";
+import { allStudentsCodeActiveState, allStudentsDroneActiveState } from "../../../shared/state/atom.ts";
 import { useLecture } from "../../../shared/context/lectureProvider.tsx";
+import { useInstructorLogin } from "../../../features/instructor/hooks/useInstructorLogin.ts";
+import { useInstructorSocket } from "../../../features/instructor/hooks/useInstructorSocket.ts";
 
 const AllControlButtons = () => {
+  const { sendMessage } = useInstructorSocket();
+  const { savedLecture } = useLecture();
   const [isControlOpen, setIsControlOpen] = useState(false);
   const [modalContent, setModalContent] = useState("");
 
-  const [allStudentsCodeActive, setAllStudentsCodeActive] = useRecoilState(
-    allStudentsCodeActiveState,
-  );
-  const [allStudentsDroneStop, setAllStudentsDroneActive] = useRecoilState(
-    allStudentsDroneActiveState,
-  );
+  const [allStudentsCodeActive, setAllStudentsCodeActive] = useRecoilState(allStudentsCodeActiveState);
+  const [allStudentsDroneStop, setAllStudentsDroneActive] = useRecoilState(allStudentsDroneActiveState);
 
   const { hasSavedLecture } = useLecture();
   const handleClickCodeActive = () => {
     setAllStudentsCodeActive(!allStudentsCodeActive);
     if (allStudentsCodeActive) {
       setModalContent("코드 실행 버튼이 비활성화 됩니다");
+      sendMessage("code:setAllActive", { lectureCode: savedLecture.code, active: false });
     } else {
       setModalContent("코드 실행 버튼이 활성화 됩니다");
+      sendMessage("code:setAllActive", { lectureCode: savedLecture.code, active: true });
     }
   };
   const handleClickDroneActive = () => {
@@ -34,8 +33,10 @@ const AllControlButtons = () => {
 
     if (allStudentsDroneStop) {
       setModalContent("드론 제어 버튼이 비활성화 됩니다");
+      sendMessage("drone:setAllActive", { lectureCode: savedLecture.code, active: false });
     } else {
       setModalContent("드론 제어 버튼이 활성화 됩니다");
+      sendMessage("drone:setAllActive", { lectureCode: savedLecture.code, active: true });
     }
   };
   return (
@@ -68,13 +69,12 @@ const AllControlButtons = () => {
               handleCodeOnClick={handleClickCodeActive}
               droneActive={allStudentsDroneStop}
               handleDroneOnClick={handleClickDroneActive}
+              size="lg"
             />
           </motion.div>
         )}
       </AnimatePresence>
-      {modalContent && (
-        <NotificationModal content={`모든 학생의 ${modalContent}`} />
-      )}
+      {modalContent && <NotificationModal content={`모든 학생의 ${modalContent}`} />}
     </>
   );
 };

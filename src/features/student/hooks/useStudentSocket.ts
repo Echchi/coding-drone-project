@@ -2,139 +2,126 @@ import { useEffect, useRef, useCallback } from "react";
 import { Socket } from "socket.io-client";
 import { useRecoilState } from "recoil";
 import { studentSocketState } from "../model/socket";
-import { IStudentSocketEvents, IStudentEmitEvents } from "../../../shared/types/socket";
+import { IStudentEmitEvents } from "../../../shared/types/socket";
 import { useLecture } from "../../../shared/context/lectureProvider";
 import { socketManager } from "../../../shared/libs/socket";
-import { useAuth } from "../../../shared/context/authContext.tsx";
 
 export const useStudentSocket = () => {
   const socketRef = useRef<Socket | null>(null);
   const { savedLecture } = useLecture();
   const [socketState, setSocketState] = useRecoilState(studentSocketState);
-
-  const updateSocketState = useCallback(
-    (updates: Partial<typeof socketState>) => {
-      setSocketState((prev) => ({ ...prev, ...updates }));
-    },
-    [setSocketState]
-  );
+  const lastSubmittedCodeRef = useRef<string>("");
+  const latestCodeRef = useRef(socketState.code);
 
   useEffect(() => {
-    if (!savedLecture.code) {
-      console.log("No lecture code found, skipping socket connection");
-      return;
-    }
+    if (!savedLecture.code) return;
 
     const studentId = sessionStorage.getItem("id");
     const name = sessionStorage.getItem("name");
 
-    if (!studentId || !name) {
-      console.log("Missing student information");
-      return;
-    }
+    if (!studentId || !name) return;
 
-    // 이미 연결된 소켓이 있다면 연결 해제
-    if (socketRef.current) {
-      console.log("Cleaning up existing socket connection");
-      socketRef.current.disconnect();
-    }
-
-    console.log("Connecting to student socket...", {
-      lectureCode: savedLecture.code,
-      studentId,
-      name,
-    });
-
+    // 소켓 연결 생성
     const socket = socketManager.connect("/student");
     socketRef.current = socket;
 
     socket.on("connect", () => {
-      console.log("Student socket connected successfully");
+      console.log("🟢 소켓 연결 성공");
+      setSocketState((prev) => ({
+        ...prev,
+        isConnected: true,
+        isCodeEnabled: true,
+        isDroneEnabled: true,
+      }));
 
-      // 강의실 입장 시도
-      const joinData = {
-        lectureCode: savedLecture.code,
-        studentId,
-        name,
-      };
-
-      console.log("Attempting to join lecture room:", joinData);
-      socket.emit("joinLecture", joinData);
+      // 강의실 참여 요청
+      socket.emit("joinLecture", { lectureCode: savedLecture.code, studentId, name });
+      console.log("📤 강의실 참여 요청 전송:", savedLecture.code);
     });
 
-    socket.on("joinSuccess", (response) => {
-      console.log("Successfully joined lecture:", response);
-      updateSocketState({ isConnected: true });
+    socket.on("joinResponse", (data) => {
+      console.log("📥 강의실 참여 응답 수신:", data);
+      setSocketState((prev) => ({
+        ...prev,
+        code: data.code ?? prev.code,
+        isCodeEnabled: data.codeActive ?? prev.isCodeEnabled,
+        isDroneEnabled: data.droneActive ?? prev.isDroneEnabled,
+      }));
+    });
 
-      // 서버에서 받은 코드가 있으면 상태 업데이트
-      if (response.code) {
-        updateSocketState({ code: response.code });
+    // 코드 업데이트 이벤트
+    socket.on("code:update", (data) => {
+      console.log("📥 코드 업데이트 수신:", data.code);
+      if (data.code === latestCodeRef.current) {
+        console.log("⚠️ 동일한 코드 업데이트 무시");
+        return;
       }
-
-      // 서버에서 받은 드론 상태가 있으면 상태 업데이트
-      if (response.droneStatus) {
-        updateSocketState({ droneStatus: response.droneStatus });
-      }
+      latestCodeRef.current = data.code;
+      setSocketState((prev) => ({ ...prev, code: data.code }));
     });
 
-    socket.on("code:saved", (response) => {
-      console.log("Code save response:", response);
+    // 코드 및 드론 활성화 상태 변경
+    socket.on("code:activeChanged", (data) => {
+      console.log("🔄 코드 활성화 상태 변경:", data.active);
+      setSocketState((prev) => ({ ...prev, isCodeEnabled: Boolean(data.active) }));
     });
 
-    socket.on("drone:saved", (response) => {
-      console.log("Drone status save response:", response);
-    });
-
-    socket.on("drone:updated", (data) => {
-      console.log("Drone status update:", data);
-      if (data.status) {
-        updateSocketState({ droneStatus: data.status });
-      }
+    socket.on("drone:activeChanged", (data) => {
+      console.log("🔄 드론 활성화 상태 변경:", data.active);
+      setSocketState((prev) => ({ ...prev, isDroneEnabled: Boolean(data.active) }));
     });
 
     socket.on("disconnect", () => {
-      console.log("❌ Student socket disconnected");
-      updateSocketState({ isConnected: false });
+      console.log("❌ 소켓 연결 끊김");
+      setSocketState((prev) => ({ ...prev, isConnected: false }));
     });
 
-    socket.on("connect_error", (error: Error) => {
-      console.error("🚨 Student socket connection error:", error);
-      updateSocketState({ isConnected: false });
+    socket.on("connect_error", (error) => {
+      console.error("🚨 소켓 연결 오류:", error.message);
+      setSocketState((prev) => ({ ...prev, isConnected: false }));
     });
 
     return () => {
-      console.log("Cleaning up student socket connection...");
-      if (socket.connected) {
-        socket.disconnect();
-      }
+      console.log("🔌 소켓 연결 해제");
+      socket.disconnect();
     };
-  }, [savedLecture.code, updateSocketState]);
+  }, [savedLecture.code]);
 
+  // 코드 제출 함수
   const submitCode = useCallback(
     (code: string) => {
       if (!socketRef.current?.connected) {
-        console.log("Cannot submit code - socket not connected");
+        console.log("🔴 코드 제출 불가 - 소켓 연결되지 않음");
+        return;
+      }
+
+      if (!socketState.isCodeEnabled) {
+        console.log("⚠️ 코드 제출 불가: 코드 편집 비활성화됨");
+        return;
+      }
+
+      if (code === lastSubmittedCodeRef.current) {
+        console.log("⚠️ 중복 코드 제출 방지");
         return;
       }
 
       const studentId = sessionStorage.getItem("id");
       const lectureCode = savedLecture.code;
-
       if (!studentId || !lectureCode) {
-        console.log("Missing required data for code submission");
+        console.log("⚠️ 코드 제출 실패 - 필요한 데이터 없음");
         return;
       }
 
-      console.log("Submitting code:", { lectureCode, studentId, codeLength: code.length });
-      socketRef.current.emit("code:submit", {
-        lectureCode,
-        studentId,
-        code,
-      });
+      latestCodeRef.current = code;
+      lastSubmittedCodeRef.current = code;
+
+      console.log("📤 코드 제출:", { lectureCode, studentId, codeLength: code.length });
+      socketRef.current.emit("code:submit", { lectureCode, studentId, code });
     },
-    [savedLecture.code]
+    [savedLecture.code, socketState.isCodeEnabled]
   );
 
+  // 메시지 전송 함수 (드론 제어 등)
   const sendMessage = useCallback(<T extends keyof IStudentEmitEvents>(event: T, data: IStudentEmitEvents[T]) => {
     if (!socketRef.current?.connected) return;
     socketRef.current.emit(event, data);

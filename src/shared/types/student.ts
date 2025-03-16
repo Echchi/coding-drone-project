@@ -11,6 +11,8 @@ export interface IStudent {
   code?: string;
   droneStatus?: DroneStatus;
   isConnected: boolean;
+  codeActive?: boolean;
+  droneActive?: boolean;
 }
 
 export interface IStudentList {

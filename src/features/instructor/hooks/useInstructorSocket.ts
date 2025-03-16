@@ -70,6 +70,8 @@ export const useInstructorSocket = () => {
             code: student.code || "",
             droneStatus: student.droneStatus || "disconnected",
             isConnected: true,
+            codeActive: student.codeActive || false,
+            droneActive: student.droneActive || false,
           };
         });
 
@@ -94,6 +96,8 @@ export const useInstructorSocket = () => {
             code: student.code || "",
             droneStatus: student.droneStatus || "disconnected",
             isConnected: true,
+            codeActive: student.codeActive || false,
+            droneActive: student.droneActive || false,
           };
         });
 
@@ -111,6 +115,8 @@ export const useInstructorSocket = () => {
               code: "",
               droneStatus: "disconnected",
               isConnected: true,
+              codeActive: false,
+              droneActive: false,
             },
           };
           console.log("학생 목록 업데이트 완료:", newList);
@@ -135,6 +141,8 @@ export const useInstructorSocket = () => {
             code: student.code || "",
             droneStatus: student.droneStatus || "disconnected",
             isConnected: true,
+            codeActive: student.codeActive || false,
+            droneActive: student.droneActive || false,
           };
         });
 
@@ -175,6 +183,8 @@ export const useInstructorSocket = () => {
             code: student.code || "",
             droneStatus: student.droneStatus || "disconnected",
             isConnected: true,
+            codeActive: student.codeActive || false,
+            droneActive: student.droneActive || false,
           };
         });
 
@@ -194,6 +204,90 @@ export const useInstructorSocket = () => {
             },
           };
           console.log("학생 드론 상태 업데이트 완료:", newList);
+          return newList;
+        });
+      }
+    });
+
+    // 코드 활성화 상태 변경 이벤트 수신
+    socket.on("code:activeChanged", (data) => {
+      console.log("👨‍💻 학생 코드 활성화 상태 변경:", data);
+      const { studentId, active, students } = data;
+
+      // 학생 목록 전체 갱신
+      if (students && Array.isArray(students)) {
+        const updatedStudentList: Record<string, IStudent> = {};
+
+        students.forEach((student: IStudent) => {
+          updatedStudentList[student.studentId] = {
+            studentId: student.studentId,
+            name: student.name,
+            code: student.code || "",
+            droneStatus: student.droneStatus || "disconnected",
+            isConnected: true,
+            codeActive: student.codeActive !== undefined ? student.codeActive : active,
+            droneActive: student.droneActive || false,
+          };
+        });
+
+        setStudentList(updatedStudentList);
+        console.log("학생 목록 전체 갱신:", updatedStudentList);
+      }
+      // 단일 학생 코드 활성화 상태만 업데이트
+      else {
+        setStudentList((prev) => {
+          if (!prev[studentId]) return prev;
+
+          const newList = {
+            ...prev,
+            [studentId]: {
+              ...prev[studentId],
+              codeActive: active,
+            },
+          };
+          console.log("학생 코드 활성화 상태 업데이트 완료:", newList);
+          return newList;
+        });
+      }
+    });
+
+    // 드론 활성화 상태 변경 이벤트 수신
+    socket.on("drone:activeChanged", (data) => {
+      console.log("🚁 학생 드론 활성화 상태 변경:", data);
+      const { studentId, active, students } = data;
+
+      // 학생 목록 전체 갱신
+      if (students && Array.isArray(students)) {
+        const updatedStudentList: Record<string, IStudent> = {};
+
+        students.forEach((student: IStudent) => {
+          updatedStudentList[student.studentId] = {
+            studentId: student.studentId,
+            name: student.name,
+            code: student.code || "",
+            droneStatus: student.droneStatus || "disconnected",
+            isConnected: true,
+            codeActive: student.codeActive || false,
+            droneActive: student.droneActive !== undefined ? student.droneActive : active,
+          };
+        });
+
+        setStudentList(updatedStudentList);
+        console.log("학생 목록 전체 갱신:", updatedStudentList);
+      }
+      // 단일 학생 드론 활성화 상태만 업데이트
+      else {
+        setStudentList((prev) => {
+          if (!prev[studentId]) return prev;
+
+          const newList = {
+            ...prev,
+            [studentId]: {
+              ...prev[studentId],
+              droneActive: active,
+            },
+          };
+          console.log("학생 드론 활성화 상태 업데이트 완료:", newList);
           return newList;
         });
       }

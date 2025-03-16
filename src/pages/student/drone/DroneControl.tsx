@@ -3,6 +3,8 @@ import { cls } from "../../../shared/utils/cls.ts";
 import { AnimatePresence, motion } from "framer-motion";
 import DroneInfo from "./DroneInfo";
 import { useDroneControl } from "../../../features/student/hooks/useDroneControl";
+import { useStudentSocket } from "../../../features/student/hooks/useStudentSocket.ts";
+import { useCodeExecution } from "../../../features/student/hooks/useCodeExecution.ts";
 
 interface IDroneControlProps {
   isOn: boolean;
@@ -32,7 +34,7 @@ const DroneControl = ({
   const [roll, setRoll] = useState(0);
   const [pitch, setPitch] = useState(0);
   const { updateDroneConnection } = useDroneControl();
-
+  const { isDroneEnabled } = useCodeExecution();
   // 드론 연결 관리
   const portRef = useRef<SerialPort | null>(null);
   const writerRef = useRef<WritableStreamDefaultWriter | null>(null);
@@ -191,9 +193,10 @@ const DroneControl = ({
   };
 
   return (
-    <div className="w-full h-auto flex flex-col">
-      <div className="flex flex-col relative mt-2">
-        {/* <div className="flex relative">
+    <>
+      <div className="w-full h-auto flex flex-col relative">
+        <div className="flex flex-col relative mt-2">
+          {/* <div className="flex relative">
           <div className="w-2/3 flex flex-col">
             <div className="w-8/12 aspect-square p-3 ml-12 relative">
               <img src="/assets/icon/drone.png" alt="drone" className="w-full h-full" />
@@ -214,88 +217,99 @@ const DroneControl = ({
           </div>
         </div> */}
 
-        {/* 자세 제어 슬라이더 */}
+          {/* 자세 제어 슬라이더 */}
 
-        <div className="flex flex-col gap-4 px-2 pb-2">
-          <div className="flex flex-col gap-1">
-            <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700">롤 (좌우 기울기): {roll}°</label>
-              <button onClick={resetSliders} className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
-                초기화
-              </button>
+          <div className="flex flex-col gap-4 px-2 pb-2">
+            <div className="flex flex-col gap-1">
+              <div className="flex justify-between items-center">
+                <label className="text-sm font-medium text-gray-700">롤 (좌우 기울기): {roll}°</label>
+                <button
+                  onClick={resetSliders}
+                  className="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded"
+                  disabled={!isOn || !isDroneEnabled}
+                >
+                  초기화
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs">좌 -30°</span>
+                <input
+                  type="range"
+                  min="-30"
+                  max="30"
+                  step="1"
+                  value={roll}
+                  onChange={handleRollChange}
+                  disabled={!isOn || !isDroneEnabled}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                />
+                <span className="text-xs">우 30°</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs">좌 -30°</span>
-              <input
-                type="range"
-                min="-30"
-                max="30"
-                step="1"
-                value={roll}
-                onChange={handleRollChange}
-                disabled={!isOn}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
-              />
-              <span className="text-xs">우 30°</span>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-gray-700">피치 (전후 기울기): {pitch}°</label>
+              <div className="flex items-center gap-2">
+                <span className="text-xs">후 -30°</span>
+                <input
+                  type="range"
+                  min="-30"
+                  max="30"
+                  step="1"
+                  value={pitch}
+                  onChange={handlePitchChange}
+                  disabled={!isOn || !isDroneEnabled}
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+                />
+                <span className="text-xs">전 30°</span>
+              </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700">피치 (전후 기울기): {pitch}°</label>
-            <div className="flex items-center gap-2">
-              <span className="text-xs">후 -30°</span>
-              <input
-                type="range"
-                min="-30"
-                max="30"
-                step="1"
-                value={pitch}
-                onChange={handlePitchChange}
-                disabled={!isOn}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
-              />
-              <span className="text-xs">전 30°</span>
-            </div>
+          {/* 드론 제어 버튼 */}
+          <div className="flex justify-center gap-2 mb-4">
+            <button
+              className={cls(
+                "font-bold rounded-lg py-[0.5vh] text-lg shadow-lg hover:shadow m-[0.5vh] outline-none disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none",
+                isOn
+                  ? "bg-neutral-300 text-neutral-500 px-2 hover:bg-neutral-200"
+                  : "bg-lime-500 text-white px-3 hover:bg-lime-400"
+              )}
+              disabled={!isDroneEnabled}
+              onClick={() => (isOn ? disconnectDrone() : connectDrone())}
+            >
+              {isOn ? "연결 해제" : "연결"}
+            </button>
+            <button
+              className="font-bold rounded-lg py-[0.5vh] px-3 text-lg shadow-lg hover:shadow m-[0.5vh] outline-none bg-blue-500 text-white hover:bg-blue-400 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none"
+              disabled={!isOn || !isDroneEnabled}
+              onClick={() => sendDroneCommand(droneCommands.takeoff())}
+            >
+              이륙
+            </button>
+            <button
+              className="font-bold rounded-lg py-[0.5vh] px-3 text-lg shadow-lg hover:shadow m-[0.5vh] outline-none bg-orange-500 text-white hover:bg-orange-400 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none"
+              disabled={!isOn || !isDroneEnabled}
+              onClick={() => sendDroneCommand(droneCommands.land())}
+            >
+              착륙
+            </button>
+            <button
+              className="font-bold rounded-lg py-[0.5vh] px-3 text-lg shadow-lg hover:shadow m-[0.5vh] outline-none bg-red-500 text-white hover:bg-red-400 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none"
+              disabled={!isOn || !isDroneEnabled}
+              onClick={() => sendDroneCommand(droneCommands.emergency())}
+            >
+              비상정지
+            </button>
           </div>
         </div>
-
-        {/* 드론 제어 버튼 */}
-        <div className="flex justify-center gap-2 mb-4">
-          <button
-            className={cls(
-              "font-bold rounded-lg py-[0.5vh] text-lg shadow-lg hover:shadow m-[0.5vh] outline-none",
-              isOn
-                ? "bg-neutral-300 text-neutral-500 px-2 hover:bg-neutral-200"
-                : "bg-lime-500 text-white px-3 hover:bg-lime-400"
-            )}
-            onClick={() => (isOn ? disconnectDrone() : connectDrone())}
-          >
-            {isOn ? "연결 해제" : "연결"}
-          </button>
-          <button
-            className="font-bold rounded-lg py-[0.5vh] px-3 text-lg shadow-lg hover:shadow m-[0.5vh] outline-none bg-blue-500 text-white hover:bg-blue-400 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none"
-            disabled={!isOn}
-            onClick={() => sendDroneCommand(droneCommands.takeoff())}
-          >
-            이륙
-          </button>
-          <button
-            className="font-bold rounded-lg py-[0.5vh] px-3 text-lg shadow-lg hover:shadow m-[0.5vh] outline-none bg-orange-500 text-white hover:bg-orange-400 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none"
-            disabled={!isOn}
-            onClick={() => sendDroneCommand(droneCommands.land())}
-          >
-            착륙
-          </button>
-          <button
-            className="font-bold rounded-lg py-[0.5vh] px-3 text-lg shadow-lg hover:shadow m-[0.5vh] outline-none bg-red-500 text-white hover:bg-red-400 disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none"
-            disabled={!isOn}
-            onClick={() => sendDroneCommand(droneCommands.emergency())}
-          >
-            비상정지
-          </button>
-        </div>
+        {!isDroneEnabled && (
+          <div className="absolute bg-zinc-500/70 w-full h-full rounded-b-lg flex justify-center items-center">
+            <p className="text-white text-2xl font-bold">드론 조작 비활성화</p>
+          </div>
+        )}
       </div>
-    </div>
+    </>
   );
 };
 
