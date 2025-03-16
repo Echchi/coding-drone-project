@@ -3,8 +3,9 @@ import DroneControl from "./DroneControl.tsx";
 import DroneInfo from "./DroneInfo.tsx";
 import DivWithTitle from "../ui/DivWithTitle.tsx";
 import { useDroneControl } from "../../../features/student/hooks/useDroneControl.ts";
+import { useStudentSocket } from "../../../features/student/hooks/useStudentSocket.ts";
 
-const Drone = ({ isDroneEnabled }: { isDroneEnabled: boolean }) => {
+const Drone = () => {
   const { drone, updateDroneState } = useDroneControl();
 
   // 드론 상태 변경 시 서버로 전송하기 위한 간소화된 setter 함수들

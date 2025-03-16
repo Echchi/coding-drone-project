@@ -5,6 +5,7 @@ import { useStudentScreen } from "../../../features/instructor/hooks/useStudentS
 import { IStudent } from "../../../shared/types/student.ts";
 import { STATUS, DroneStatus } from "../../../shared/constants/status.ts";
 import MonacoEditor from "@monaco-editor/react";
+import { useInstructorSocket } from "../../../features/instructor/hooks/useInstructorSocket.ts";
 
 interface IScreenProps {
   student: IStudent;
@@ -78,13 +79,13 @@ export default function Screen({ student }: IScreenProps) {
             <p>연결되지않음</p>
           </div>
         )}
-        <div className="bottom-0 right-0 pr-2 absolute w-full h-9 rounded-t-lg flex justify-end items-center ">
+        <div className="bottom-0 right-0 pr-2 absolute w-full h-9 rounded-t-lg flex justify-end items-center bg-white">
           <div className="flex space-x-2 w-3/5">
             <ControlButtons
               codeActive={codeActive}
-              handleCodeOnClick={toggleCodeActive}
+              handleCodeOnClick={(event) => toggleCodeActive(event)}
               droneActive={droneActive}
-              handleDroneOnClick={toggleDroneActive}
+              handleDroneOnClick={(event) => toggleDroneActive(event)}
               size="sm"
               disabled={!student?.isConnected}
             />

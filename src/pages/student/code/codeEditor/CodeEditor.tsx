@@ -51,7 +51,7 @@ const CodeEditor = ({
       <div className="h-full overflow-y-auto flex flex-col">
         <pre className="px-6 py-4 text-sm flex-shrink-0">{HEADER_CODE}</pre>
 
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 relative">
           <MonacoEditor
             height="100%"
             defaultLanguage="python"
@@ -78,7 +78,11 @@ const CodeEditor = ({
             }}
           />
         </div>
-
+        {!isCodeEnabled && (
+          <div className="absolute bg-zinc-500/70 w-full h-full rounded-tr-lg rounded-b-lg flex justify-center items-center">
+            <p className="text-white text-2xl font-bold">코드 작성 비활성화</p>
+          </div>
+        )}
         <pre className="px-6 py-4 text-sm flex-shrink-0">{FOOTER_CODE}</pre>
       </div>
     </DivWithTitle>

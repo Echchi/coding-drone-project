@@ -44,6 +44,7 @@ const Code = () => {
   // 상태 표시 메시지
   const getStatusMessage = () => {
     if (!socketState.isConnected) return "서버에 연결되어 있지 않습니다. 페이지를 새로고침해 주세요.";
+    if (!isCodeEnabled && !isDroneEnabled) return "선생님에 의해 코드 실행과 드론 조작이 비활성화되었습니다.";
     if (!isCodeEnabled) return "선생님에 의해 코드 실행이 비활성화되었습니다.";
     if (!isDroneEnabled) return "선생님에 의해 드론 조작이 비활성화되었습니다.";
     if (!isDroneConnected) return "드론이 연결되어 있지 않습니다.";
@@ -69,19 +70,13 @@ const Code = () => {
       <CodeEditor codeInput={userCode} setCodeInput={setUserCode} isCodeEnabled={isCodeEnabled} />
 
       <MainButton
-        title={isCodeEnabled ? "실행하기" : "실행 비활성화됨"}
+        title={"실행하기"}
         onClick={handleExecuteCode}
         className={`w-full ${isCodeEnabled ? "bg-[#E5A243] hover:bg-[#d89636]" : "bg-gray-400 cursor-not-allowed"} text-white font-bold py-4 rounded-2xl text-xl my-6`}
         disabled={!isCodeEnabled}
       />
 
       <CodeResult result={result} />
-
-      {!isCodeEnabled && (
-        <div className="absolute top-0 right-0 bg-red-500 text-white px-3 py-1 rounded-bl font-bold shadow-md z-50">
-          코드 편집 비활성화됨
-        </div>
-      )}
     </div>
   );
 };

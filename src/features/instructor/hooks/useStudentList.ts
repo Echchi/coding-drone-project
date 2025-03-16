@@ -1,7 +1,12 @@
+// import { studentListState } from "../atoms/studentListState";
+import { studentListState } from "../../../shared/state/atom";
 import { useRecoilValue } from "recoil";
-import { studentListState } from "../atoms/studentListState";
 
 export const useStudentList = () => {
   const students = useRecoilValue(studentListState);
-  return { students };
+
+  // Object.values 사용하여 객체를 배열로 변환
+  const studentArray = Object.values(students);
+
+  return { students: studentArray };
 };

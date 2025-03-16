@@ -36,12 +36,7 @@ const Workspace = () => {
           <span className="text-sm text-gray-600">{socketState.isConnected ? "연결됨" : "연결 안됨"}</span>
         </div>
       </div>
-      <WorkspaceContent
-        isCodeEnabled={socketState.isCodeEnabled}
-        isDroneEnabled={socketState.isDroneEnabled}
-        onCodeChange={handleCodeChange}
-        onDroneStatusChange={handleDroneStatusChange}
-      />
+      <WorkspaceContent onCodeChange={handleCodeChange} onDroneStatusChange={handleDroneStatusChange} />
     </div>
   );
 };

@@ -3,9 +3,9 @@ import { cls } from "../../../shared/utils/cls.ts";
 import LockButton from "../../../shared/ui/LockButton.tsx";
 interface IControlButtonsProps {
   codeActive: boolean;
-  handleCodeOnClick: () => void;
+  handleCodeOnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   droneActive: boolean;
-  handleDroneOnClick: () => void;
+  handleDroneOnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   size: "sm" | "md" | "lg";
   disabled?: boolean;
 }
@@ -21,7 +21,7 @@ const ControlButtons = ({
     <>
       <LockButton
         isActive={codeActive}
-        onClick={handleCodeOnClick}
+        onClick={(event) => handleCodeOnClick(event)}
         type="code"
         size={size}
         disabled={disabled}
@@ -29,7 +29,7 @@ const ControlButtons = ({
       />
       <LockButton
         isActive={droneActive}
-        onClick={handleDroneOnClick}
+        onClick={(event) => handleDroneOnClick(event)}
         type="drone"
         size={size}
         disabled={disabled}

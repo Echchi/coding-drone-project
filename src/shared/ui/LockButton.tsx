@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface LockButtonProps {
   isActive: boolean;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   type: "code" | "drone";
   className?: string;
   size?: "sm" | "md" | "lg";
