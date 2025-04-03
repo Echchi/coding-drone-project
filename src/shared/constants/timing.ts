@@ -1,0 +1,1 @@
+export const NOTIFICATION_MODAL_CLOSE_TIME = 3000;

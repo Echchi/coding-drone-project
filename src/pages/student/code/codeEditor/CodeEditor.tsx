@@ -1,23 +1,90 @@
-import { SetStateAction } from "react";
-import DivWithTitle from "../../ui/DivWithTitle.tsx";
+import { useEffect, useState, useRef } from "react";
+import MonacoEditor from "@monaco-editor/react";
+import { useStudentSocket } from "../../../../features/student/hooks/useStudentSocket";
+import { debounce } from "../../../../shared/utils/debounce";
+import DivWithTitle from "../../ui/DivWithTitle";
+import { HEADER_CODE, FOOTER_CODE } from "../../../../features/student/constants/code";
 
-interface ICodeEditorProps {
-  setCodeInput: React.Dispatch<SetStateAction<string>>;
+interface CodeEditorProps {
   codeInput: string;
+  setCodeInput: React.Dispatch<React.SetStateAction<string>>;
+  readOnly?: boolean;
+  placeholder?: string;
+  isCodeEnabled?: boolean;
 }
-const CodeEditor = ({ setCodeInput, codeInput }: ICodeEditorProps) => {
+
+const CodeEditor = ({
+  codeInput,
+  setCodeInput,
+  readOnly = false,
+  placeholder,
+  isCodeEnabled = true,
+}: CodeEditorProps) => {
+  const { submitCode } = useStudentSocket();
+  const [editorValue, setEditorValue] = useState(codeInput);
+
+  useEffect(() => {
+    setEditorValue(codeInput);
+  }, [codeInput]);
+
+  // 디바운스된 코드 제출 함수
+  const debouncedSubmitCode = debounce((code: string) => {
+    console.log("디바운스 후 코드 제출:", code.substring(0, 30) + "...");
+    submitCode(code);
+  }, 500);
+
+  const handleEditorChange = (value: string | undefined) => {
+    if (value === undefined) return;
+    if (!isCodeEnabled) return;
+
+    setEditorValue(value);
+    setCodeInput(value);
+    debouncedSubmitCode(value);
+  };
+
   return (
     <DivWithTitle
-      title={"코드"}
+      title={"코드 에디터"}
       titleClassName={"bg-lime-500 ring-lime-500"}
       divClassName={"w-full h-2/3 ring-lime-500"}
     >
-      <textarea
-        className="w-full h-full bg-transparent p-5 text-lg outline-0 resize-none placeholder:text-3xl placeholder:font-dunggeunmiso-b font-JetBrains"
-        placeholder="코드를 입력해보세요"
-        onChange={(event) => setCodeInput(event.target.value)}
-        value={codeInput}
-      ></textarea>
+      <div className="h-full overflow-y-auto flex flex-col">
+        <pre className="px-6 py-4 text-sm flex-shrink-0">{HEADER_CODE}</pre>
+
+        <div className="flex-1 min-h-0 relative">
+          <MonacoEditor
+            height="100%"
+            defaultLanguage="python"
+            theme="light"
+            value={editorValue}
+            onChange={handleEditorChange}
+            className="rounded-lg"
+            options={{
+              readOnly: !isCodeEnabled || readOnly,
+              minimap: { enabled: false },
+              fontSize: 16,
+              scrollBeyondLastLine: false,
+              automaticLayout: true,
+              lineNumbers: "off",
+              renderLineHighlight: "none",
+              overviewRulerBorder: false,
+              scrollbar: {
+                vertical: "hidden",
+                horizontal: "hidden",
+              },
+              domReadOnly: !isCodeEnabled || readOnly,
+              cursorStyle: "line",
+              cursorBlinking: "solid",
+            }}
+          />
+        </div>
+        {!isCodeEnabled && (
+          <div className="absolute bg-zinc-500/70 w-full h-full rounded-tr-lg rounded-b-lg flex justify-center items-center">
+            <p className="text-white text-2xl font-bold">코드 작성 비활성화</p>
+          </div>
+        )}
+        <pre className="px-6 py-4 text-sm flex-shrink-0">{FOOTER_CODE}</pre>
+      </div>
     </DivWithTitle>
   );
 };

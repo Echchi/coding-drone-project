@@ -1,30 +1,38 @@
-import React, { useState } from "react";
-import { cls } from "../../../sahred/utils/cls.ts";
-import ControlButtons from "./ControlButtons.tsx";
-import code from "../../student/code/Code.tsx";
-import Screen from "./Screen.tsx";
-import Modal from "../../../sahred/ui/Modal.tsx";
+import React, { useEffect } from "react";
+import { useInstructorSocket } from "../../../features/instructor/hooks/useInstructorSocket";
+import { useLecture } from "../../../shared/context/lectureProvider";
+import { useStudentList } from "../../../features/instructor/hooks/useStudentList";
+import { useScreenPagination } from "../../../features/instructor/hooks/useScreenPagination";
+import { StudentGrid } from "../../../features/instructor/ui/StudentGrid";
+import { Pagination } from "../../../features/instructor/ui/Pagination";
 
 const ScreenGrid = ({ division }: { division: string }) => {
+  const { studentList, socket } = useInstructorSocket();
+  const { savedLecture } = useLecture();
+  const { students } = useStudentList();
+
+  const { currentPage, totalPages, currentPageStudents, handlePrevPage, handleNextPage } = useScreenPagination({
+    studentList,
+    division,
+  });
+
+  useEffect(() => {
+    if (!socket?.connected) {
+      console.log("Socket not connected");
+      return;
+    }
+  }, [socket]);
+
   return (
-    <>
-      <div
-        className={cls(
-          "w-full h-full grid gap-3",
-          division === "4x3"
-            ? "grid-cols-4 grid-rows-3"
-            : division === "4x4"
-              ? "grid-cols-4 grid-rows-4"
-              : division === "5x4"
-                ? "grid-cols-5 grid-rows-4"
-                : "grid-cols-4 grid-rows-3",
-        )}
-      >
-        {Array.from({ length: 12 }, (_, index) => (
-          <Screen index={index} />
-        ))}
-      </div>
-    </>
+    <div className="w-full h-[calc(100vh-250px) flex flex-col space-y-4">
+      <StudentGrid division={division} students={currentPageStudents} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPrevPage={handlePrevPage}
+        onNextPage={handleNextPage}
+      />
+    </div>
   );
 };
 

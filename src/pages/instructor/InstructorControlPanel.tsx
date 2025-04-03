@@ -1,27 +1,27 @@
 import React, { useState } from "react";
-import { cls } from "../../sahred/utils/cls.ts";
 import { AnimatePresence, motion } from "framer-motion";
 import ControlMenu from "./controlMenu/ControlMenu.tsx";
 import ScreenGrid from "./screens/ScreenGrid.tsx";
-import Modal from "../../sahred/ui/Modal.tsx";
-import { useRecoilState } from "recoil";
-import { selectedScreenState } from "../../features/control/atom.ts";
+import AlertModal from "../../shared/ui/AlertModal.tsx";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { codeModalState, selectedScreenState } from "../../shared/state/atom.ts";
 import WorkspaceContent from "../student/workspaceContent.tsx";
+import CreateLectureCodeButton from "./controlMenu/CreateLectureCodeButton.tsx";
+import { useInstructorSocket } from "../../features/instructor/hooks/useInstructorSocket.ts";
 
 const InstructorControlPanel = () => {
   const [division, setDivision] = useState("4x3");
-  const [selectedStudent, setSelectedStudent] =
-    useRecoilState(selectedScreenState);
+  const [selectedStudent, setSelectedStudent] = useRecoilState(selectedScreenState);
+  const { sendMessage, socket } = useInstructorSocket();
+
   return (
     <>
       <AnimatePresence>
-        {selectedStudent.id > 0 && (
-          <Modal
+        {selectedStudent.id && (
+          <AlertModal
             title={selectedStudent.name}
-            onClose={() =>
-              setSelectedStudent((prev) => ({ ...prev, id: -0, name: "" }))
-            }
-            content={<WorkspaceContent />}
+            onClose={() => setSelectedStudent((prev) => ({ ...prev, id: "", name: "" }))}
+            content={<WorkspaceContent forceInstructorMode={true} sendMessage={sendMessage} />}
           />
         )}
       </AnimatePresence>

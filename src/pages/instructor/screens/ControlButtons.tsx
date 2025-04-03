@@ -1,49 +1,40 @@
 import React from "react";
-import { cls } from "../../../sahred/utils/cls.ts";
+import { cls } from "../../../shared/utils/cls.ts";
+import LockButton from "../../../shared/ui/LockButton.tsx";
 interface IControlButtonsProps {
   codeActive: boolean;
-  handleCodeOnClick: () => void;
+  handleCodeOnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
   droneActive: boolean;
-  handleDroneOnClick: () => void;
-  isSmall?: boolean;
+  handleDroneOnClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  size: "sm" | "md" | "lg";
+  disabled?: boolean;
 }
 const ControlButtons = ({
   codeActive,
   handleCodeOnClick,
   droneActive,
   handleDroneOnClick,
-  isSmall,
+  size,
+  disabled,
 }: IControlButtonsProps) => {
   return (
     <>
-      <button
-        className={cls(
-          "w-full font-semibold rounded-xl shadow-lg transition-colors",
-          codeActive ? "bg-blue-500 text-white" : "bg-blue-200 text-blue-600",
-          isSmall ? "py-1 text-xs" : "py-3 text-lg",
-        )}
-        onClick={(event) => {
-          event.stopPropagation();
-          handleCodeOnClick();
-        }}
-      >
-        코드 {codeActive ? "비활성화" : "활성화"}
-      </button>
-      <button
-        className={cls(
-          "w-full font-semibold rounded-xl shadow-lg transition-colors",
-          droneActive
-            ? "bg-green-500 text-white"
-            : "bg-green-200 text-green-600",
-          isSmall ? "py-1 text-xs" : "py-3 text-lg",
-        )}
-        onClick={(event) => {
-          event.stopPropagation();
-          handleDroneOnClick();
-        }}
-      >
-        드론 {droneActive ? "비활성화" : "활성화"}
-      </button>
+      <LockButton
+        isActive={codeActive}
+        onClick={(event) => handleCodeOnClick(event)}
+        type="code"
+        size={size}
+        disabled={disabled}
+        label="코드"
+      />
+      <LockButton
+        isActive={droneActive}
+        onClick={(event) => handleDroneOnClick(event)}
+        type="drone"
+        size={size}
+        disabled={disabled}
+        label="드론"
+      />
     </>
   );
 };
