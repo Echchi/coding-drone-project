@@ -67,7 +67,7 @@ const Code = () => {
         </div>
       )}
 
-      <CodeEditor codeInput={userCode} setCodeInput={setUserCode} isCodeEnabled={isCodeEnabled} />
+      <CodeEditor className="flex-1" />
 
       <MainButton
         title={"실행하기"}

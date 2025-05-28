@@ -5,6 +5,11 @@ export interface ILectureParams {
   active?: boolean;
 }
 
+export interface ILectureDeactivateParams {
+  lectureId: number;
+  active: boolean;
+}
+
 export interface ILectureResponse {
   id: number;
   code: string;

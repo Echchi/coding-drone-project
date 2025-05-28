@@ -5,6 +5,7 @@ import CodeEditor from "../../student/code/codeEditor/CodeEditor.tsx";
 import { FOOTER_CODE, HEADER_CODE } from "../../../features/student/constants/code";
 import { useInstructorSocket } from "../../../features/instructor/hooks/useInstructorSocket";
 import { useLecture } from "../../../shared/context/lectureProvider.tsx";
+import { IStudentEmitEvents } from "../../../shared/types/socket.ts";
 
 interface InstructorCodeProps {
   studentId: string;
@@ -13,7 +14,7 @@ interface InstructorCodeProps {
   codeActive: boolean;
   droneActive: boolean;
   droneStatus: string;
-  sendMessage: <T extends string, D>(event: T, data: D) => void;
+  sendMessage: <T extends keyof IStudentEmitEvents>(event: T, data: IStudentEmitEvents[T]) => void;
 }
 
 const InstructorCode = ({
@@ -105,19 +106,7 @@ const InstructorCode = ({
         </div>
       )}
 
-      <CodeEditor
-        codeInput={userCode}
-        setCodeInput={(value) => {
-          if (typeof value === "function") {
-            const newValue = value(userCode);
-            handleCodeChange(newValue);
-          } else {
-            handleCodeChange(value);
-          }
-        }}
-        isCodeEnabled={true}
-        readOnly={false}
-      />
+      <CodeEditor className="flex-1" />
 
       <MainButton
         title="변경사항 저장"

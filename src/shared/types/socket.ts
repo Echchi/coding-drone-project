@@ -47,6 +47,12 @@ export interface CodeUpdatedByInstructorData {
   instructorId: string;
 }
 
+export interface CodeInstructorEditData {
+  lectureCode: string;
+  studentId: string;
+  code: string;
+}
+
 // Socket Event Interfaces
 export interface IStudentSocketEvents {
   "code:update": CodeUpdateData;
@@ -64,6 +70,7 @@ export interface IStudentEmitEvents {
   "joinLecture": JoinLectureData;
   "code:update": CodeUpdateData;
   "code:submit": CodeSubmitData;
+  "code:instructorEdit": CodeInstructorEditData;
   "drone:status": DroneStatusData;
   "drone:update": DroneStatusData;
 }

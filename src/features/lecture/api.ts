@@ -1,6 +1,6 @@
 import { axiosInstance } from "../../shared/libs/axios.ts";
 
-import { ILectureParams } from "../../shared/types/lecture.ts";
+import { ILectureParams, ILectureDeactivateParams } from "../../shared/types/lecture.ts";
 
 export const lectureApi = {
   generateCode: async () => {
@@ -11,7 +11,7 @@ export const lectureApi = {
     const response = await axiosInstance.post("/lecture", params);
     return response.data;
   },
-  deActiveLecture: async ({ lectureId, active }: ILectureParams) => {
+  deActiveLecture: async ({ lectureId, active }: ILectureDeactivateParams) => {
     const response = await axiosInstance.put("/lecture", { lectureId, active });
     return response.data;
   },
