@@ -1,10 +1,10 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { ILectureParams } from "../../../../shared/types/lecture.ts";
-import { lectureApi } from "../../api.ts";
+import { useMutation } from "@tanstack/react-query";
+import { lectureApi } from "../../api";
+import { ILectureDeactivateParams } from "../../../../shared/types/lecture";
 
 export const useDeactivateLecture = () => {
   return useMutation({
-    mutationFn: ({ lectureId, active }: ILectureParams) =>
+    mutationFn: ({ lectureId, active }: ILectureDeactivateParams) =>
       lectureApi.deActiveLecture({ lectureId, active }),
   });
 };

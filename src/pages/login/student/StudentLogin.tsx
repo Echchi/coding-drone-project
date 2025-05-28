@@ -6,11 +6,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import MainButton from "../../../shared/ui/MainButton.tsx";
 import { useNavigate } from "react-router-dom";
-import debounce from "../../../shared/utils/debounce.ts";
+import { debounce } from "../../../shared/utils/debounce.ts";
 import { useLectureConnectMutation } from "../../../features/student/hooks/api/useLectureConnectMutation.ts";
 import { UseGetLectureByCode } from "../../../features/lecture/hooks/api/useGetLectureByCode.ts";
 import { useLecture } from "../../../shared/context/lectureProvider.tsx";
 import { useStudentLogin } from "../../../features/student/hooks/useStudentLogin.ts";
+import { useStudentSocket } from "../../../features/student/hooks/useStudentSocket.ts";
 
 const StudentLogin = () => {
   const {

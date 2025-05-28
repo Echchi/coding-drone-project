@@ -18,7 +18,11 @@ const Workspace = () => {
   const handleDroneStatusChange = useCallback(
     (status: string) => {
       if (socketState.isDroneEnabled) {
-        sendMessage("drone:status", { status });
+        sendMessage("drone:status", {
+          status,
+          lectureCode: sessionStorage.getItem("lectureCode") || "",
+          studentId: sessionStorage.getItem("studentId") || ""
+        });
       }
     },
     [socketState.isDroneEnabled, sendMessage]

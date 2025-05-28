@@ -1,5 +1,5 @@
-import React from "react";
-import DivWithTitle from "../ui/DivWithTitle.tsx";
+import React, { useState, useEffect, useRef } from "react";
+import DivWithTitle from "../../../shared/ui/DivWithTitle.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 

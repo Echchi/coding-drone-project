@@ -7,7 +7,7 @@ import { useRecoilValue } from "recoil";
 import { studentSocketState } from "../../../features/student/model/socket";
 import CodeEditor from "./codeEditor/CodeEditor.tsx";
 import { useCodeExecution } from "../../../features/student/hooks/useCodeExecution";
-import { FOOTER_CODE, HEADER_CODE, PLACEHOLDER_CODE } from "../../../features/student/constants/code";
+import { FOOTER_CODE, HEADER_CODE, PLACEHOLDER_CODE } from "../../../shared/constants/code";
 
 const Code = () => {
   const { socketState } = useStudentSocket();
@@ -67,7 +67,7 @@ const Code = () => {
         </div>
       )}
 
-      <CodeEditor codeInput={userCode} setCodeInput={setUserCode} isCodeEnabled={isCodeEnabled} />
+      <CodeEditor className="flex-1" />
 
       <MainButton
         title={"실행하기"}

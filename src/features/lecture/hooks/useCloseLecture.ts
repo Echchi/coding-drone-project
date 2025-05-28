@@ -1,23 +1,18 @@
-import { useState } from "react";
-import { useLecture } from "../../../shared/context/lectureProvider.tsx";
 import { useDeactivateLecture } from "./api/useDeactivateLecture.ts";
+import { useLecture } from "../../../shared/context/lectureProvider.tsx";
+import { useNavigate } from "react-router-dom";
 
-export const UseCloseLecture = () => {
-  const [isCloseLectureModalOpen, setIsCloseLectureModalOpen] = useState(false);
-  const { resetSavedLecture, hasSavedLecture, savedLecture } = useLecture();
-  const { mutate, data } = useDeactivateLecture();
-  const handleClickCloseButton = () => {
-    setIsCloseLectureModalOpen(false);
-    mutate({ lectureId: savedLecture.lectureId, active: false });
-    resetSavedLecture();
-    /* 학생들과 통신 종료 */
+export const useCloseLecture = () => {
+  const { mutate } = useDeactivateLecture();
+  const { savedLecture } = useLecture();
+  const navigate = useNavigate();
+
+  const closeLecture = () => {
+    if (savedLecture.lectureId) {
+      mutate({ lectureId: savedLecture.lectureId, active: false });
+    }
+    navigate("/");
   };
-  return {
-    isCloseLectureModalOpen,
-    setIsCloseLectureModalOpen,
-    handleClickCloseButton,
-    hasSavedLecture,
-  };
+
+  return { closeLecture };
 };
-
-export default UseCloseLecture;

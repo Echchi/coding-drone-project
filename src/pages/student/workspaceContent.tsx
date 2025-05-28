@@ -5,13 +5,14 @@ import Chat from "./chat/Chat.tsx";
 import InstructorCode from "../instructor/code/InstructorCode.tsx";
 import { useRecoilValue } from "recoil";
 import { selectedScreenState, studentListState } from "../../shared/state/atom.ts";
-import { useAuth } from "../../shared/context/authContext";
+import { useAuth } from "../../shared/context/authProvider";
+import { IStudentEmitEvents } from "../../shared/types/socket.ts";
 
 interface WorkspaceContentProps {
   onCodeChange?: (code: string) => void;
   onDroneStatusChange?: (status: string) => void;
   forceInstructorMode?: boolean;
-  sendMessage: <T extends string, D>(event: T, data: D) => void;
+  sendMessage: <T extends keyof IStudentEmitEvents>(event: T, data: IStudentEmitEvents[T]) => void;
 }
 
 const WorkspaceContent: React.FC<WorkspaceContentProps> = ({

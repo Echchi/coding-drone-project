@@ -4,8 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 
 import { UseGetLectureByCode } from "../../lecture/hooks/api/useGetLectureByCode.ts";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../shared/context/authContext.tsx";
-import { debounce } from "../../../shared/utils/debounce.ts";
+import { useAuth } from "../../../shared/context/authProvider.tsx";
+
+interface LoginErrorResponse {
+  message?: string;
+  error?: string;
+  response?: {
+    status: number;
+  };
+}
 
 export const useStudentLogin = () => {
   const navigate = useNavigate();
@@ -21,6 +28,7 @@ export const useStudentLogin = () => {
   });
   const [codeCheck, setCodeCheck] = useState(false);
   const { setRole } = useAuth();
+
   const handleOnChangeCode = (value: string) => {
     setCodeCheck(false);
     setErrors((prev) => ({ ...prev, code: "" }));
@@ -33,12 +41,20 @@ export const useStudentLogin = () => {
   };
 
   const debounceInput = useMemo(() => {
-    return debounce((field: "code" | "name", value: string) => {
-      setForm((prev) => ({ ...prev, [field]: value.trim() }));
-    }, 500);
+    let timeoutId: NodeJS.Timeout | null = null;
+
+    return (field: string, value: string) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        setForm((prev) => ({ ...prev, [field]: value.trim() }));
+      }, 500);
+    };
   }, []);
 
   const { data: lectureData, error: getLectureError } = UseGetLectureByCode(form.code);
+
   useEffect(() => {
     if (!lectureData) return;
     if (lectureData) {
@@ -46,7 +62,7 @@ export const useStudentLogin = () => {
     }
     setCodeCheck(true);
     setErrors((prev) => ({ ...prev, code: "" }));
-  }, [lectureData]);
+  }, [lectureData, setSavedLecture]);
 
   useEffect(() => {
     if (!getLectureError) return;
@@ -71,13 +87,16 @@ export const useStudentLogin = () => {
         setRole("student");
         navigate("/workspace");
       },
-      onError: (error: any) => {
-        if (error?.response?.status === 400) {
+      onError: (error: Error) => {
+        // Type assertion for axios error
+        const axiosError = error as { response?: { status: number } };
+        if (axiosError?.response?.status === 400) {
           setErrors((prev) => ({ ...prev, name: "이미 사용중인 이름입니다." }));
         }
       },
     });
   };
+
   return {
     form,
     errors,

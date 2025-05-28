@@ -2,7 +2,14 @@ import { useEffect, useRef, useCallback } from "react";
 import { Socket } from "socket.io-client";
 import { useRecoilState } from "recoil";
 import { studentSocketState } from "../model/socket";
-import { IStudentEmitEvents } from "../../../shared/types/socket";
+import {
+  IStudentEmitEvents,
+  JoinResponseData,
+  CodeUpdateData,
+  CodeActiveChangedData,
+  DroneActiveChangedData,
+  CodeUpdatedByInstructorData
+} from "../../../shared/types/socket";
 import { useLecture } from "../../../shared/context/lectureProvider";
 import { socketManager } from "../../../shared/libs/socket";
 
@@ -41,7 +48,7 @@ export const useStudentSocket = () => {
       console.log("📤 강의실 참여 요청 전송:", savedLecture.code);
     });
 
-    socket.on("joinResponse", (data) => {
+    socket.on("joinResponse", (data: JoinResponseData) => {
       console.log("📥 강의실 참여 응답 수신:", data);
       setSocketState((prev) => ({
         ...prev,
@@ -52,7 +59,7 @@ export const useStudentSocket = () => {
     });
 
     // 코드 업데이트 이벤트
-    socket.on("code:update", (data) => {
+    socket.on("code:update", (data: CodeUpdateData) => {
       console.log("📥 코드 업데이트 수신:", data.code);
       if (data.code === latestCodeRef.current) {
         console.log("⚠️ 동일한 코드 업데이트 무시");
@@ -63,19 +70,19 @@ export const useStudentSocket = () => {
     });
 
     // 코드 및 드론 활성화 상태 변경
-    socket.on("code:activeChanged", (data) => {
+    socket.on("code:activeChanged", (data: CodeActiveChangedData) => {
       console.log("🔄 코드 활성화 상태 변경:", data);
 
       setSocketState((prev) => ({ ...prev, isCodeEnabled: Boolean(data.active) }));
     });
 
-    socket.on("drone:activeChanged", (data) => {
+    socket.on("drone:activeChanged", (data: DroneActiveChangedData) => {
       console.log("🔄 드론 활성화 상태 변경:", data.active);
       setSocketState((prev) => ({ ...prev, isDroneEnabled: Boolean(data.active) }));
     });
 
     // 강사가 수정한 코드 수신
-    socket.on("code:updatedByInstructor", (data) => {
+    socket.on("code:updatedByInstructor", (data: CodeUpdatedByInstructorData) => {
       console.log("👨‍🏫 강사가 코드를 수정했습니다:", data.code.substring(0, 30) + "...");
       setSocketState((prev) => ({
         ...prev,
@@ -83,12 +90,12 @@ export const useStudentSocket = () => {
       }));
     });
 
-    socket.on("disconnect", () => {
-      console.log("❌ 소켓 연결 끊김");
+    socket.on("disconnect", (reason: string) => {
+      console.log("❌ 소켓 연결 끊김:", reason);
       setSocketState((prev) => ({ ...prev, isConnected: false }));
     });
 
-    socket.on("connect_error", (error) => {
+    socket.on("connect_error", (error: Error) => {
       console.error("🚨 소켓 연결 오류:", error.message);
       setSocketState((prev) => ({ ...prev, isConnected: false }));
     });
@@ -97,7 +104,7 @@ export const useStudentSocket = () => {
       console.log("🔌 소켓 연결 해제");
       socket.disconnect();
     };
-  }, [savedLecture.code]);
+  }, [savedLecture.code, setSocketState]);
 
   // 코드 제출 함수
   const submitCode = useCallback(

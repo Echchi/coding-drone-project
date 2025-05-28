@@ -1,4 +1,6 @@
-import DivWithTitle from "../../ui/DivWithTitle.tsx";
+import React from "react";
+import { motion } from "framer-motion";
+import DivWithTitle from "../../../../shared/ui/DivWithTitle.tsx";
 
 const CodeResult = ({ result }: { result: string }) => {
   // 결과 문자열에 줄바꿈이 있는지 확인하고 처리

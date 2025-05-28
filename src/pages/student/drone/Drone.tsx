@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import DroneControl from "./DroneControl.tsx";
 import DroneInfo from "./DroneInfo.tsx";
-import DivWithTitle from "../ui/DivWithTitle.tsx";
+import DivWithTitle from "../../../shared/ui/DivWithTitle.tsx";
 import { useDroneControl } from "../../../features/student/hooks/useDroneControl.ts";
 import { useStudentSocket } from "../../../features/student/hooks/useStudentSocket.ts";
 
