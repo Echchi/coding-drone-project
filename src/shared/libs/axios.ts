@@ -1,16 +1,23 @@
-import axios from "axios";
+import axios, { AxiosResponse, AxiosError, InternalAxiosRequestConfig } from "axios";
 import { jwtDecode } from "jwt-decode";
 
 interface TokenPayload {
   exp: number;
-  [key: string]: any;
+  iat: number;
+  sub: string;
+  [key: string]: unknown;
+}
+
+interface RefreshTokenResponse {
+  access_token: string;
+  expires_in?: number;
 }
 
 class TokenManager {
   private static instance: TokenManager;
   private refreshPromise: Promise<string> | null = null;
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): TokenManager {
     if (!this.instance) {
@@ -43,9 +50,9 @@ class TokenManager {
   async refreshAccessToken(): Promise<string> {
     if (this.refreshPromise) return this.refreshPromise;
 
-    this.refreshPromise = new Promise(async (resolve, reject) => {
+    this.refreshPromise = new Promise<string>(async (resolve, reject) => {
       try {
-        const response = await axios.post(
+        const response: AxiosResponse<RefreshTokenResponse> = await axios.post(
           `${import.meta.env.VITE_API_URL}/refresh_token`,
         );
         const newAccessToken = response.data.access_token;
@@ -74,7 +81,7 @@ export const axiosInstance = axios.create({
 const tokenManager = TokenManager.getInstance();
 
 axiosInstance.interceptors.request.use(
-  async (config) => {
+  async (config: InternalAxiosRequestConfig) => {
     if (["/login", "/lecture_connect"].includes(config.url || "")) {
       return config;
     }
@@ -85,23 +92,27 @@ axiosInstance.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error),
+  (error: AxiosError) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  (response: AxiosResponse) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
     if (
-      !["/login", "/lecture_connect"].includes(originalRequest.url || "") &&
+      !["/login", "/lecture_connect"].includes(originalRequest?.url || "") &&
       error.response?.status === 401 &&
-      !originalRequest._retry
+      !originalRequest?._retry
     ) {
-      originalRequest._retry = true;
+      if (originalRequest) {
+        originalRequest._retry = true;
+      }
       try {
         const newToken = await tokenManager.refreshAccessToken();
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        if (originalRequest) {
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        }
         return axiosInstance(originalRequest);
       } catch {
         return Promise.reject(error);
