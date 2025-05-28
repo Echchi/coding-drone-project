@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useStudentSocket } from "../../../../features/student/hooks/useStudentSocket";
 import { useCodeExecution } from "../../../../features/student/hooks/useCodeExecution";
-import { INITIAL_CODE } from "../../../../features/student/constants/code";
-import DivWithTitle from "../../ui/DivWithTitle";
-import { HEADER_CODE, FOOTER_CODE } from "../../../../features/student/constants/code";
+import { INITIAL_CODE, HEADER_CODE, FOOTER_CODE } from "../../../../shared/constants/code";
+import DivWithTitle from "../../../../shared/ui/DivWithTitle";
 
 interface CodeEditorProps {
   className?: string;
@@ -65,8 +64,8 @@ export const CodeEditor = ({ className }: CodeEditorProps) => {
             onChange={handleCodeChange}
             disabled={!isCodeEnabled}
             className={`flex-1 p-4 font-mono text-sm border-none outline-none resize-none ${isCodeEnabled
-                ? "bg-gray-900 text-green-400"
-                : "bg-gray-700 text-gray-400 cursor-not-allowed"
+              ? "bg-gray-900 text-green-400"
+              : "bg-gray-700 text-gray-400 cursor-not-allowed"
               }`}
             placeholder={
               isCodeEnabled
@@ -86,8 +85,8 @@ export const CodeEditor = ({ className }: CodeEditorProps) => {
             onClick={handleExecuteCode}
             disabled={!isCodeEnabled}
             className={`px-4 py-2 rounded text-sm font-medium ${isCodeEnabled
-                ? "bg-green-600 hover:bg-green-700 text-white"
-                : "bg-gray-600 text-gray-400 cursor-not-allowed"
+              ? "bg-green-600 hover:bg-green-700 text-white"
+              : "bg-gray-600 text-gray-400 cursor-not-allowed"
               }`}
           >
             코드 실행

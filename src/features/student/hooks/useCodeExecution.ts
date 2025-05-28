@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useStudentSocket } from "./useStudentSocket";
-import { HEADER_CODE, FOOTER_CODE, DRONE_COMMAND_DELAYS } from "../constants/code";
+import { HEADER_CODE, FOOTER_CODE, DRONE_COMMAND_DELAYS } from "../../../shared/constants/code.ts";
 import { IDroneCommand, DroneCommandType, MoveCommand, TurnCommand } from "../../../shared/types/code";
 
 interface ParsedCommand {

@@ -5,7 +5,7 @@ import Chat from "./chat/Chat.tsx";
 import InstructorCode from "../instructor/code/InstructorCode.tsx";
 import { useRecoilValue } from "recoil";
 import { selectedScreenState, studentListState } from "../../shared/state/atom.ts";
-import { useAuth } from "../../shared/context/authContext";
+import { useAuth } from "../../shared/context/authProvider";
 import { IStudentEmitEvents } from "../../shared/types/socket.ts";
 
 interface WorkspaceContentProps {
