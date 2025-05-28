@@ -4,15 +4,18 @@ import CloseButton from "../../../shared/ui/CloseButton.tsx";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useDeactivateLecture } from "../../../features/lecture/hooks/api/useDeactivateLecture.ts";
 import { useLecture } from "../../../shared/context/lectureProvider.tsx";
-import useCloseLecture from "../../../features/lecture/hooks/useCloseLecture.ts";
+import { useCloseLecture } from "../../../features/lecture/hooks/useCloseLecture.ts";
 
 const CloseLectureButton = () => {
-  const {
-    isCloseLectureModalOpen,
-    setIsCloseLectureModalOpen,
-    handleClickCloseButton,
-    hasSavedLecture,
-  } = useCloseLecture();
+  const [isCloseLectureModalOpen, setIsCloseLectureModalOpen] = useState(false);
+  const { closeLecture } = useCloseLecture();
+  const { hasSavedLecture } = useLecture();
+
+  const handleClickCloseButton = () => {
+    closeLecture();
+    setIsCloseLectureModalOpen(false);
+  };
+
   return (
     <>
       <button

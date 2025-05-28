@@ -1,45 +1,52 @@
-import { useEffect, useState, useRef } from "react";
-import MonacoEditor from "@monaco-editor/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useStudentSocket } from "../../../../features/student/hooks/useStudentSocket";
-import { debounce } from "../../../../shared/utils/debounce";
+import { useCodeExecution } from "../../../../features/student/hooks/useCodeExecution";
+import { INITIAL_CODE } from "../../../../features/student/constants/code";
 import DivWithTitle from "../../ui/DivWithTitle";
 import { HEADER_CODE, FOOTER_CODE } from "../../../../features/student/constants/code";
 
 interface CodeEditorProps {
-  codeInput: string;
-  setCodeInput: React.Dispatch<React.SetStateAction<string>>;
-  readOnly?: boolean;
-  placeholder?: string;
-  isCodeEnabled?: boolean;
+  className?: string;
 }
 
-const CodeEditor = ({
-  codeInput,
-  setCodeInput,
-  readOnly = false,
-  placeholder,
-  isCodeEnabled = true,
-}: CodeEditorProps) => {
-  const { submitCode } = useStudentSocket();
-  const [editorValue, setEditorValue] = useState(codeInput);
+export const CodeEditor = ({ className }: CodeEditorProps) => {
+  const { socketState, submitCode } = useStudentSocket();
+  const { result, executePythonCode, isCodeEnabled } = useCodeExecution();
+  const [localCode, setLocalCode] = useState(socketState.code || INITIAL_CODE);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // 소켓에서 받은 코드로 로컬 상태 업데이트
   useEffect(() => {
-    setEditorValue(codeInput);
-  }, [codeInput]);
+    if (socketState.code !== undefined && socketState.code !== localCode) {
+      setLocalCode(socketState.code);
+    }
+  }, [socketState.code, localCode]);
 
   // 디바운스된 코드 제출 함수
-  const debouncedSubmitCode = debounce((code: string) => {
-    console.log("디바운스 후 코드 제출:", code.substring(0, 30) + "...");
-    submitCode(code);
-  }, 500);
+  const debouncedSubmitCode = useMemo(() => {
+    let timeoutId: NodeJS.Timeout | null = null;
 
-  const handleEditorChange = (value: string | undefined) => {
-    if (value === undefined) return;
-    if (!isCodeEnabled) return;
+    return (code: string) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        submitCode(code);
+      }, 500);
+    };
+  }, [submitCode]);
 
-    setEditorValue(value);
-    setCodeInput(value);
-    debouncedSubmitCode(value);
+  const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newCode = e.target.value;
+    setLocalCode(newCode);
+
+    if (isCodeEnabled) {
+      debouncedSubmitCode(newCode);
+    }
+  };
+
+  const handleExecuteCode = () => {
+    executePythonCode(localCode);
   };
 
   return (
@@ -52,35 +59,43 @@ const CodeEditor = ({
         <pre className="px-6 py-4 text-sm flex-shrink-0">{HEADER_CODE}</pre>
 
         <div className="flex-1 min-h-0 relative">
-          <MonacoEditor
-            height="100%"
-            defaultLanguage="python"
-            theme="light"
-            value={editorValue}
-            onChange={handleEditorChange}
-            className="rounded-lg"
-            options={{
-              readOnly: !isCodeEnabled || readOnly,
-              minimap: { enabled: false },
-              fontSize: 16,
-              scrollBeyondLastLine: false,
-              automaticLayout: true,
-              lineNumbers: "off",
-              renderLineHighlight: "none",
-              overviewRulerBorder: false,
-              scrollbar: {
-                vertical: "hidden",
-                horizontal: "hidden",
-              },
-              domReadOnly: !isCodeEnabled || readOnly,
-              cursorStyle: "line",
-              cursorBlinking: "solid",
-            }}
+          <textarea
+            ref={textareaRef}
+            value={localCode}
+            onChange={handleCodeChange}
+            disabled={!isCodeEnabled}
+            className={`flex-1 p-4 font-mono text-sm border-none outline-none resize-none ${isCodeEnabled
+                ? "bg-gray-900 text-green-400"
+                : "bg-gray-700 text-gray-400 cursor-not-allowed"
+              }`}
+            placeholder={
+              isCodeEnabled
+                ? "여기에 Python 코드를 입력하세요..."
+                : "코드 편집이 비활성화되었습니다."
+            }
+            spellCheck={false}
           />
         </div>
         {!isCodeEnabled && (
           <div className="absolute bg-zinc-500/70 w-full h-full rounded-tr-lg rounded-b-lg flex justify-center items-center">
             <p className="text-white text-2xl font-bold">코드 작성 비활성화</p>
+          </div>
+        )}
+        <div className="bg-gray-800 p-2 border-t border-gray-600">
+          <button
+            onClick={handleExecuteCode}
+            disabled={!isCodeEnabled}
+            className={`px-4 py-2 rounded text-sm font-medium ${isCodeEnabled
+                ? "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-gray-600 text-gray-400 cursor-not-allowed"
+              }`}
+          >
+            코드 실행
+          </button>
+        </div>
+        {result && (
+          <div className="h-32 bg-black text-green-400 p-4 font-mono text-sm overflow-auto border-t border-gray-600">
+            <pre className="whitespace-pre-wrap">{result}</pre>
           </div>
         )}
         <pre className="px-6 py-4 text-sm flex-shrink-0">{FOOTER_CODE}</pre>
