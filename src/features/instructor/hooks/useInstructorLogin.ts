@@ -3,7 +3,7 @@ import { useLoginApi } from "./api/useLoginApi.ts";
 import { ILoginParams } from "../../../shared/types/instructor.ts";
 import { MESSAGES } from "../../../shared/constants/messages.ts";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../shared/context/authContext.tsx";
+import { useAuth } from "../../../shared/context/authProvider.tsx";
 
 export const useInstructorLogin = () => {
   const [loginParams, setLoginParams] = useState<ILoginParams>({

@@ -1,11 +1,11 @@
 import { useEffect, useRef, useCallback } from "react";
-import { Socket } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import { socketManager } from "../../../shared/libs/socket";
 import { useLecture } from "../../../shared/context/lectureProvider";
 import { useRecoilState } from "recoil";
-import { studentListState } from "../../../shared/state/atom";
+import { studentListState } from "../../../shared/state/atom.ts";
 import { IStudent } from "../../../shared/types/student";
-import { useAuth } from "../../../shared/context/authContext";
+import { useAuth } from "../../../shared/context/authProvider";
 
 export const useInstructorSocket = () => {
   const socketRef = useRef<Socket | null>(null);

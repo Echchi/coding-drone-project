@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import MainButton from "../../../shared/ui/MainButton.tsx";
 import CodeResult from "../../student/code/codeResult/CodeResult.tsx";
 import CodeEditor from "../../student/code/codeEditor/CodeEditor.tsx";
-import { FOOTER_CODE, HEADER_CODE } from "../../../features/student/constants/code";
+import { FOOTER_CODE, HEADER_CODE } from "../../../shared/constants/code";
 import { useInstructorSocket } from "../../../features/instructor/hooks/useInstructorSocket";
 import { useLecture } from "../../../shared/context/lectureProvider.tsx";
 import { IStudentEmitEvents } from "../../../shared/types/socket.ts";

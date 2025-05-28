@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { UseGetLectureByCode } from "../../lecture/hooks/api/useGetLectureByCode.ts";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../shared/context/authContext.tsx";
+import { useAuth } from "../../../shared/context/authProvider.tsx";
 
 interface LoginErrorResponse {
   message?: string;
